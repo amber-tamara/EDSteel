@@ -1,21 +1,20 @@
 "use client";
+import CategoryList from "./CategoryList";
 import { useState } from "react";
 import Image from "next/image";
 import { FaPhone, FaSearch, FaShoppingBasket } from "react-icons/fa";
 
-export default function DesktopHeader({
-  hardwareCategories,
-}: DesktopHeaderProps) {
+export default function DesktopHeader({ categories }: DesktopHeaderProps) {
   const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", query);
+    // ("Searching for:", query);
     // TODO: trigger your search logic here
   };
 
   return (
-    <header className="hidden lg:flex flex-col">
+    <header className="relative hidden lg:flex flex-col">
       <div className="bg-primary-custom-teal px-15 py-4 flex justify-around h-1/2">
         <div className="flex w-screen items-center">
           <Image
@@ -52,19 +51,11 @@ export default function DesktopHeader({
           </button>
         </div>
       </div>
-      <div className="bg-secondary-custom-teal h-16 items-center justify-center hidden lg:flex">
-        <ul className="flex justify-around w-full">
-          {hardwareCategories.map((item, index) => (
-            <li className="cursor-pointer" key={index}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <CategoryList categories={categories} />
     </header>
   );
 }
 
 interface DesktopHeaderProps {
-  hardwareCategories: string[];
+  categories: string[];
 }

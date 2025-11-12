@@ -4,21 +4,18 @@ import Image from "next/image";
 import { FaPhone, FaSearch, FaShoppingBasket, FaUser } from "react-icons/fa";
 import MobileNav from "./MobileNav";
 
-export default function MobileHeader({
-  hardwareCategories,
-}: MobileHeaderProps) {
+export default function MobileHeader({ categories }: MobileHeaderProps) {
   const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", query);
     // TODO: trigger your search logic here
   };
   return (
     <div className="relative">
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
         <div className="flex justify-between">
-          <MobileNav hardwareCategories={hardwareCategories} />
+          <MobileNav categories={categories} />
           <button className="flex items-center justify-center flex-col">
             <FaPhone size={20} />
             <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
@@ -60,5 +57,5 @@ export default function MobileHeader({
 }
 
 interface MobileHeaderProps {
-  hardwareCategories: string[];
+  categories: string[];
 }

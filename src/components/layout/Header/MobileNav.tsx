@@ -3,10 +3,9 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import Image from "next/image";
 
-export default function MobileNav({ hardwareCategories }: MobileNavProps) {
+export default function MobileNav({ categories }: MobileNavProps) {
   const [Open, setOpen] = useState(false);
   const handleToggle = () => setOpen(!Open);
-  console.log(Open);
   return (
     <div className="flex">
       <button
@@ -31,7 +30,7 @@ export default function MobileNav({ hardwareCategories }: MobileNavProps) {
           </button>
 
           <ul className="mt-24 flex flex-col divide-y divide-[#82a7a1]">
-            {hardwareCategories.map((item, index) => (
+            {categories.map((item, index) => (
               <li
                 key={index}
                 className="px-4 py-2 cursor-pointer focus:bg-[#82a7a1]"
@@ -48,5 +47,5 @@ export default function MobileNav({ hardwareCategories }: MobileNavProps) {
 }
 
 interface MobileNavProps {
-  hardwareCategories: string[];
+  categories: string[];
 }
