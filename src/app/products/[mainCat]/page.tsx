@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CategoryOverview from "@/components/layout/Products/CategoryOverview";
+import CategoryOverview from "@/components/Products/CategoryOverview";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

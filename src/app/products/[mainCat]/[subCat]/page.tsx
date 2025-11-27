@@ -1,5 +1,5 @@
 "use client";
-import ProductCard from "@/components/layout/Products/ProductCard";
+import ProductCard from "@/components/Products/ProductCard";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
