@@ -11,7 +11,6 @@ export default function ProductCard({
   mainCat: string;
   subCat: string;
 }) {
-  console.log(mainCat);
   return (
     <div className="grid gap-md lg:gap-lg max-md:gap-0 md:grid-cols-3 md:px-8">
       {category &&

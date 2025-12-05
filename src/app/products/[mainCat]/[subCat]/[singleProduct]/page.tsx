@@ -14,7 +14,7 @@ export default async function ProductPage({
     return <div>Product not found</div>;
   }
 
-  return <SingleProduct product={product} />;
+  return <SingleProduct initialProduct={product} />;
 }
 
 // Fetch a single product by slug

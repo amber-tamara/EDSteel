@@ -12,7 +12,6 @@ export default function CategoryOverview({
     products: Array<{ name: string; image: string | null }>;
   }>;
 }) {
-  console.log(subCategories.subCats);
   return (
     <div className="text-black p-6">
       {subCategories &&
