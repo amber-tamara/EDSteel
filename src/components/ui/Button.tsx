@@ -27,7 +27,7 @@ export default function Button({
       onClick={handleClick}
       className="px-7 py-3 rounded-[3.75rem] bg-white font-bold text-black border-2 border-black
                  hover:bg-black hover:text-white hover:shadow-inner transition duration-200 cursor-pointer
-                 flex items-center justify-center space-x-1 min-w-[160px] min-h-[40px]"
+                 flex items-center justify-center space-x-1 w-1/2 min-h-[45px]"
     >
       <div
         className={`absolute flex space-x-1.5 transition-opacity duration-200 ease-in-out

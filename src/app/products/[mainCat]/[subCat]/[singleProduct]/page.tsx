@@ -5,8 +5,8 @@ export default async function ProductPage({
 }: {
   params: { mainCat: string; subCat: string; singleProduct: string };
 }) {
-  const slug = await params.singleProduct; // <-- this is your product slug
-  console.log("Slug from URL:", slug);
+  const { singleProduct } = await params;
+  const slug = singleProduct; // <-- this is your product slug
 
   const product = await getProduct(slug);
 
@@ -38,6 +38,6 @@ async function getProduct(slug: string) {
   }
 
   const data = await res.json();
-  console.log(data);
+  console.log(data[0].meta_data[0].value);
   return data[0] ?? null; // first and only product
 }

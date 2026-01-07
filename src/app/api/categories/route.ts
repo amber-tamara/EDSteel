@@ -15,7 +15,6 @@ export async function GET() {
       throw new Error(`WooCommerce fetch failed with status: ${res.status}`);
     }
     const data = await res.json();
-    // console.log(data);
     let catList = {};
     data.forEach((item) => {
       if (item.parent === 0) {

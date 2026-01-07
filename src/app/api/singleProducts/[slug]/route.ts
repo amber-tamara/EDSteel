@@ -19,5 +19,4 @@ export async function GET(
         "Basic " + Buffer.from(`${key}:${secret}`).toString("base64"),
     },
   });
-  console.log(fetchedData);
 }
