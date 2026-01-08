@@ -38,6 +38,8 @@ async function getProduct(slug: string) {
   }
 
   const data = await res.json();
+  if (data[0].meta_data[0].value > 1) {
+  }
   console.log(data[0].meta_data[0].value);
   return data[0] ?? null; // first and only product
 }
