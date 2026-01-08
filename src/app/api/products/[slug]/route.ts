@@ -79,8 +79,6 @@ export async function GET(
     );
 
     const filtered = subCatData.filter(Boolean);
-    console.log(filtered);
-    return NextResponse.json(filtered);
   } catch (err: any) {
     console.error("API Error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
