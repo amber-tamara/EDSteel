@@ -20,7 +20,7 @@ export default function ProductCard({
   };
   return (
     <div className="grid gap-md lg:gap-lg max-md:gap-0 md:grid-cols-3 md:px-8">
-      {category &&
+      {Array.isArray(category) &&
         category.map((product) => (
           <div
             key={product.id}

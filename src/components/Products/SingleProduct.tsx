@@ -5,13 +5,20 @@ import QuantityInput from "../ui/QuantitySelector";
 import WishlistHeart from "../ui/WishlistHeart";
 import ProductDetails from "./ProductDetails";
 import ProductInformation from "./ProductInformation";
+import ProductCard from "./ProductCard";
 
 interface ProductViewProps {
-  initialProduct;
+  productData;
 }
-export default function ProductView({ initialProduct }: ProductViewProps) {
+export default function ProductView({ productData }: ProductViewProps) {
   const [qty, setQty] = useState(1);
-  const [product, setProduct] = useState(initialProduct);
+  const [product, setProduct] = useState(productData.singleProduct ?? null);
+  const [variants, setVariants] = useState(productData.varients ?? []);
+  console.log(product)
+  const mainCat = product.categories[0].name
+  const subCat = product.slug 
+
+
   const handleClick = async () => {
     console.log("Button clicked!");
     // simulate a network delay
@@ -48,6 +55,8 @@ export default function ProductView({ initialProduct }: ProductViewProps) {
         <ProductInformation product={product} />
         <ProductDetails product={product} />
       </div>
+      <h2 className="text-2xl font-bold mb-6 mt-6 ml-9 text-black">Similar products</h2>
+      <ProductCard category={variants} mainCat={mainCat} subCat={subCat}/>
     </div>
   );
 }

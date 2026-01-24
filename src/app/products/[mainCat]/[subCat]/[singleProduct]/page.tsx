@@ -14,7 +14,7 @@ export default async function ProductPage({
     return <div>Product not found</div>;
   }
 
-  return <SingleProduct initialProduct={product} />;
+  return <SingleProduct productData={product} />;
 }
 
 // Fetch a single product by slug
@@ -38,8 +38,38 @@ async function getProduct(slug: string) {
   }
 
   const data = await res.json();
-  if (data[0].meta_data[0].value > 1) {
+  let formattedVariants: any[] = [];
+  const variantIDs = data[0].meta_data[0].value;
+  if (variantIDs.length > 1) {
+    console.log(variantIDs)
+    const variantIDsWithoutCurrent = variantIDs.filter(item => item !== data[0].id)
+    console.log(variantIDsWithoutCurrent)
+
+    // join IDs into comma-separated string
+    const idsString = variantIDsWithoutCurrent.join(",");
+
+    const res = await fetch(`${baseUrl}/products?include=${idsString}`, {
+      headers: {
+        Authorization: "Basic " + Buffer.from(`${key}:${secret}`).toString("base64"),
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch variant products");
+
+    const varientData = await res.json();
+
+    // map safely
+    formattedVariants = varientData.map(item => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      price: item.price,
+      img: item.images?.[0]?.src ?? "/placeholder.png",
+    }));
   }
-  console.log(data[0].meta_data[0].value);
-  return data[0] ?? null; // first and only product
+
+  return {
+    singleProduct: data[0] ?? null,
+    varients: formattedVariants ?? null
+  }
 }
