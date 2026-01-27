@@ -40,6 +40,23 @@ export async function GET(
 
     const subCatResult = await subCatData.json();
 
+    const attributesMap: Record<string, Set<string>> = {};
+
+    subCatResult.forEach((item) => {
+      item.attributes.forEach((attr) => {
+        if (!attributesMap[attr.name]) attributesMap[attr.name] = new Set();
+        attr.options.forEach(opt => attributesMap[attr.name].add(opt));
+      });
+    });
+
+    // Convert sets to arrays for JSON output
+    const filters = Object.entries(attributesMap).map(([name, optionsSet]) => ({
+      name,
+      options: Array.from(optionsSet),
+    }));
+
+    console.log(filters);
+
     const subCatsData = subCatResult.map((item) => ({
       name: item.name,
       slug: item.slug,

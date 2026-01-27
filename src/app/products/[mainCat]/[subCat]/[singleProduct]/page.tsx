@@ -41,9 +41,7 @@ async function getProduct(slug: string) {
   let formattedVariants: any[] = [];
   const variantIDs = data[0].meta_data[0].value;
   if (variantIDs.length > 1) {
-    console.log(variantIDs)
     const variantIDsWithoutCurrent = variantIDs.filter(item => item !== data[0].id)
-    console.log(variantIDsWithoutCurrent)
 
     // join IDs into comma-separated string
     const idsString = variantIDsWithoutCurrent.join(",");

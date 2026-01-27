@@ -14,7 +14,7 @@ export default function DesktopHeader({ categories }: DesktopHeaderProps) {
   };
 
   return (
-    <header className="relative hidden lg:flex flex-col">
+    <header className="relative hidden lg:flex flex-col pb-3">
       <div className="bg-primary-custom-teal px-15 py-4 flex justify-around h-1/2">
         <div className="flex w-screen items-center">
           <Image

@@ -2,6 +2,7 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoryOverview from "@/components/Products/CategoryOverview";
+import Filter from "@/components/Products/Filter";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +17,6 @@ export default function MainCategoryPage() {
     }
   }, [mainCat]);
 
-  const router = useRouter();
   return (
     <div className="text-black">
       <div className="pl-4 pt-4 pb-1.5">
