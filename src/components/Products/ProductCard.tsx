@@ -5,11 +5,11 @@ import Button from "@/components/ui/Button";
 import WishlistHeart from "../ui/WishlistHeart";
 
 export default function ProductCard({
-  category,
+  products,
   mainCat,
   subCat,
 }: {
-  category: any[];
+  products: any[];
   mainCat: string;
   subCat: string;
 }) {
@@ -20,8 +20,8 @@ export default function ProductCard({
   };
   return (
     <div className="grid gap-md lg:gap-lg max-md:gap-0 md:grid-cols-3 md:px-8">
-      {Array.isArray(category) &&
-        category.map((product) => (
+      {Array.isArray(products) &&
+        products.map((product) => (
           <div
             key={product.id}
             className="flex flex-col border border-transparent hover:border-gray-300 duration-200 p-4 hover:shadow-lg transition h-full min-h-[380px]"
