@@ -1,8 +1,8 @@
 "use client";
 import ProductCard from "@/components/Products/ProductCard";
 import Filter from "@/components/Products/Filter";
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation"; 
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
@@ -13,7 +13,7 @@ export default function SubCategoryPage() {
   const [attributes, setAttributes] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({}); // e.g., { Color: ["Red"], Size: ["M"] }
 
-  // 1️⃣ Fetch products + attributes on mount
+  console.log(selectedFilters)
   useEffect(() => {
     if (subCat) {
       fetch(`/api/subProducts/${subCat}`)
@@ -26,24 +26,21 @@ export default function SubCategoryPage() {
     }
   }, [subCat]);
 
-  // 2️⃣ Refetch products when filters change
-// Refetch products when selectedFilters changes
-useEffect(() => {
-  if (!subCat) return;
+  //Filter Data
+  useEffect(() => {
+    if (!subCat) return;
+    console.log(selectedFilters)
+    //  setProducts(data.products)
+  }, [selectedFilters, subCat]);
 
-  const params = new URLSearchParams();
-  for (const [attrName, values] of Object.entries(selectedFilters)) {
-    if (values.length) params.append(attrName, values.join(",")); // e.g., ?Color=Red,Blue
-  }
-  console.log(params.toString())
+  const filteredProducts = useMemo(() => {
+    const allSelectedIds = Object.values(selectedFilters)
+      .flatMap(options => options.flatMap(o => o.ids));
 
-  fetch(`/api/subProducts/${subCat}?${params.toString()}`)
-    .then((res) => res.json())
-    .then((data) => setProducts(data.products || []))
-    .catch(console.error);
-}, [selectedFilters, subCat]);
-console.log(subCat)
+    if (!allSelectedIds.length) return products; // no filter = show all
 
+    return products.filter(p => allSelectedIds.includes(p.id));
+  }, [products, selectedFilters]);
 
   return (
     <div className="">
@@ -85,12 +82,12 @@ console.log(subCat)
         {/* Filter Component */}
         <Filter
           mainCat={mainCat}
-          products={products}  // ✅ the full list of products
+          products={attributes}  // ✅ the full list of products
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
         />
         {/* Product Listing */}
-        <ProductCard products={products} subCat={subCat} mainCat={mainCat} />
+        <ProductCard products={filteredProducts} subCat={subCat} mainCat={mainCat} />
       </div>
     </div>
   );

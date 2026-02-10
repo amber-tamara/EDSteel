@@ -59,14 +59,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // dev only for self-signed cert
 export async function GET(
   request: Request,
   context: { params: Promise<{ slug: string }> }) {
-    const { params } = context;
+  const { params } = context;
   const { slug } = await params;
-  console.log(slug)
 
   if (!slug) {
     return NextResponse.json({ error: "Slug missing" }, { status: 400 });
   }
-  console.log('here')
 
   try {
     const baseUrl = process.env.WOO_COMMERCE_API_URL!;
@@ -93,14 +91,6 @@ export async function GET(
 
     const products = await prodRes.json();
 
-    // 3️⃣ Fetch all global attributes
-    const attrRes = await fetch(`${baseUrl}/products/attributes`, {
-      headers: { Authorization: authHeader },
-    });
-    if (!attrRes.ok) throw new Error("Attributes fetch failed");
-
-    const attributes = await attrRes.json();
-
     // 4️⃣ Shape products data for frontend
     const productData = products.map(item => ({
       id: item.id,
@@ -111,14 +101,45 @@ export async function GET(
       img: item.images?.[0]?.src ?? "/placeholder.png",
     }));
 
-    // 5️⃣ Shape attributes data for frontend
-    const attributesData = attributes.map(attr => ({
-      id: attr.id,
-      name: attr.name,
-      slug: attr.slug,
-      type: attr.type,
-      order_by: attr.order_by,
-    }));
+    const productsWithAttributes = products.map(product => ({
+      // product.attributes.map((arr) => {console.log(arr)})
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      img: product.images?.[0]?.src ?? "/placeholder.png",
+      attributes: (product.attributes || []).map(attr => ({
+        name: attr.name,
+        slug: attr.slug,
+        options: [...new Set(attr.options)], // deduplicate options
+      })),
+   }));
+   productsWithAttributes.map((art) => console.log(art.attributes))
+    // console.log(productsWithAttributes)
+
+    // create global attribute list, including associated product IDs
+    const attributesData = Object.values(
+      productsWithAttributes.reduce((acc, product) => {
+        (product.attributes || []).forEach(attr => {
+          if (!acc[attr.name]) {
+            acc[attr.name] = {
+              name: attr.name,
+              slug: attr.slug,
+              options: [...attr.options],
+              productIds: [product.id], // first product for this attribute
+            };
+          } else {
+            acc[attr.name].options = [
+              ...new Set([...acc[attr.name].options, ...attr.options])
+            ];
+            acc[attr.name].productIds.push(product.id); // add this product ID
+          }
+        });
+        return acc;
+      }, {})
+    );
+
+    // console.log(attributesData)
 
     // ✅ Return both products and global attributes
     return NextResponse.json({ products: productData, attributes: attributesData });
