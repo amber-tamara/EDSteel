@@ -16,8 +16,8 @@ export default function CategoryList({ categories }: CategoryListProps) {
               <ul className="h-[66vh] transition-all duration-300 ease-in-out py-5 px-3 w-full bg-white shadow-2xl cursor-pointer absolute top-full left-0 hidden group-hover:flex flex-col">
                 {item.subCats.map((sub) => (
                   <li className="hover:underline" key={sub.name}>
-                    <Link href={`/products/${item.mainCat}/${sub.name}`}>
-                      {sub.name}
+                    <Link href={`/products/${item.mainCatSlug}/${sub.slug}`}>
+                      {sub.name.replace(/and/g, "&")}
                     </Link>
                   </li>
                 ))}

@@ -1,5 +1,4 @@
 "use client";
-import { FaRegHeart } from "react-icons/fa";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import WishlistHeart from "../ui/WishlistHeart";
@@ -14,8 +13,6 @@ export default function ProductCard({
   subCat: string;
 }) {
   const handleClick = async () => {
-    console.log("Button clicked!");
-    // simulate a network delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
   return (
