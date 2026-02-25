@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { fromSlugToName, andToAmpersand } from "@/helpers/text";
 
 interface FilterOption {
   option: string;
@@ -21,6 +22,7 @@ interface FilterProps {
 
 export default function Filter({
   mainCat,
+  subCat,
   products = [],
   selectedFilters,
   setSelectedFilters,
@@ -60,10 +62,10 @@ export default function Filter({
 
   return (
     <div className="mb-4 pt-10 w-80 min-w-[280px]">
-      <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
-        Categories
+      <h1 className="text-2xl pb-2 font-bold">
+        {fromSlugToName(andToAmpersand(subCat))}
       </h1>
-      <h2 className="mt-4 text-gray-600">See more {mainCat}</h2>
+      <h2 className="mt-1 text-gray-600">See more {fromSlugToName(andToAmpersand(mainCat))}</h2>
 
       <h1 className="text-2xl pb-2 border-b border-gray-400 mt-8 font-bold">
         Filters

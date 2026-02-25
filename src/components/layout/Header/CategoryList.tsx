@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { andToAmpersand } from "@/helpers/text";
 
 export default function CategoryList({ categories }: CategoryListProps) {
   return (
@@ -17,7 +18,7 @@ export default function CategoryList({ categories }: CategoryListProps) {
                 {item.subCats.map((sub) => (
                   <li className="hover:underline" key={sub.name}>
                     <Link href={`/products/${item.mainCatSlug}/${sub.slug}`}>
-                      {sub.name.replace(/and/g, "&")}
+                      {andToAmpersand(sub.name) || sub}
                     </Link>
                   </li>
                 ))}
