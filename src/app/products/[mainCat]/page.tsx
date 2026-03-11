@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoryOverview from "@/components/Products/CategoryOverview";
+import Breadcrumbs from "@/components/ui/Breadcrumb";
 import Link from "next/link";
 
 export default function MainCategoryPage() {
@@ -29,7 +30,7 @@ export default function MainCategoryPage() {
 
     return (
       <div className="text-black">
-        <div className="pl-4 pt-4 pb-1.5">
+        {/* <div className="pl-4 pt-4 pb-1.5">
           <Link
             href="/"
             className="relative bg-left-bottom bg-gradient-to-r from-green-500 to-green-500 bg-[length:0%_2px] bg-no-repeat hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
@@ -46,7 +47,8 @@ export default function MainCategoryPage() {
           >
             {mainCat}
           </span>
-        </div>
+        </div> */}
+        <Breadcrumbs mainCat={mainCat}/>
         <h1 className="pb-1.5 text-4xl font-bold pl-4 pt-4">{mainCat}</h1>
         <CategoryOverview mainCat={mainCat} subCategories={subCategories} />
       </div>

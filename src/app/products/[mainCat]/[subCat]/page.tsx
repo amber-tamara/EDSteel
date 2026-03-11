@@ -24,41 +24,39 @@ export default function SubCategoryPage() {
     }
   }, [subCat]);
 
-  const filteredProducts = useMemo(() => {
-    if (Object.keys(selectedFilters).length === 0) {
-      return products;
-    }
+ const filteredProducts = useMemo(() => {
+  console.log("Filtering products");
+  console.log("Selected filters:", selectedFilters);
 
-    const groupAllowedSets: Set<number>[] = [];
+  if (Object.keys(selectedFilters).length === 0) return products;
 
-    Object.entries(selectedFilters).forEach(([_, selectedOptions]) => {
-      if (selectedOptions.length === 0) return;
+  const allAllowedIds = new Set<number>();
 
-      const allowed = new Set<number>();
-      selectedOptions.forEach((option) => {
-        option.productIds.forEach((raw: any) => {
-          const id = Number(raw);
-          if (!isNaN(id)) allowed.add(id);
-        });
+  Object.entries(selectedFilters).forEach(([groupName, selectedOptions]) => {
+    if (selectedOptions.length === 0) return;
+
+    const groupIds = new Set<number>();
+    selectedOptions.forEach((option) => {
+      option.productIds.forEach((id: any) => {
+        const numId = Number(id);
+        if (!isNaN(numId)) groupIds.add(numId);
       });
-
-      if (allowed.size > 0) groupAllowedSets.push(allowed);
     });
 
-    if (groupAllowedSets.length === 0) return products;
+    console.log(`Group ${groupName} allowed IDs:`, Array.from(groupIds));
 
-    // Start with first group's IDs
-    let finalIds = new Set(groupAllowedSets[0]);
+    // Union: add all IDs from this group
+    groupIds.forEach((id) => allAllowedIds.add(id));
+  });
 
-    // Intersect with every other group
-    for (let i = 1; i < groupAllowedSets.length; i++) {
-      const current = groupAllowedSets[i];
-      finalIds = new Set([...finalIds].filter(id => current.has(id)));
-      if (finalIds.size === 0) break;
-    }
+  console.log("All allowed IDs (union across groups):", Array.from(allAllowedIds));
 
-    return products.filter(p => finalIds.has(Number(p.id)));
-  }, [products, selectedFilters]);
+  const filtered = products.filter((p) => allAllowedIds.has(Number(p.id)));
+  console.log("Filtered products IDs:", filtered.map(p => p.id));
+  console.log("Filtered products count:", filtered.length);
+
+  return filtered;
+}, [products, selectedFilters]);
 
   return (
     <div>
