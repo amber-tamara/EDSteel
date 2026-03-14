@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { fromSlugToName, andToAmpersand } from "@/helpers/text";
+import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
 
 interface FilterOption {
@@ -39,41 +39,41 @@ export default function Filter({
   };
 
   const toggleOption = (attrName: string, option: FilterOption) => {
-  const normalizedAttr = attrName.trim();
-  const normalizedOption = option.option.trim();
+    const normalizedAttr = attrName.trim();
+    const normalizedOption = option.option.trim();
 
-  console.group(`Toggling option: ${normalizedOption} in group: ${normalizedAttr}`);
+    console.group(`Toggling option: ${normalizedOption} in group: ${normalizedAttr}`);
 
-  setSelectedFilters((prev) => {
-    console.log("Previous selectedFilters:", JSON.stringify(prev, null, 2));
+    setSelectedFilters((prev) => {
+      console.log("Previous selectedFilters:", JSON.stringify(prev, null, 2));
 
-    const current = prev[normalizedAttr] || [];
-    const exists = current.some((o) => o.option.trim() === normalizedOption);
-    console.log("Current options in this group:", current.map(o => o.option));
-    console.log("Exists already?", exists);
+      const current = prev[normalizedAttr] || [];
+      const exists = current.some((o) => o.option.trim() === normalizedOption);
+      console.log("Current options in this group:", current.map(o => o.option));
+      console.log("Exists already?", exists);
 
-    let updated: FilterOption[];
-    if (exists) {
-      updated = current.filter((o) => o.option.trim() !== normalizedOption);
-      console.log("Updated options after removal:", updated.map(o => o.option));
-    } else {
-      updated = [...current, { ...option, option: normalizedOption }];
-      console.log("Updated options after addition:", updated.map(o => o.option));
-    }
+      let updated: FilterOption[];
+      if (exists) {
+        updated = current.filter((o) => o.option.trim() !== normalizedOption);
+        console.log("Updated options after removal:", updated.map(o => o.option));
+      } else {
+        updated = [...current, { ...option, option: normalizedOption }];
+        console.log("Updated options after addition:", updated.map(o => o.option));
+      }
 
-    if (updated.length === 0) {
-      const { [normalizedAttr]: _, ...rest } = prev;
-      console.log("Group empty, removing group key. Rest of state:", JSON.stringify(rest, null, 2));
-      return rest;
-    }
+      if (updated.length === 0) {
+        const { [normalizedAttr]: _, ...rest } = prev;
+        console.log("Group empty, removing group key. Rest of state:", JSON.stringify(rest, null, 2));
+        return rest;
+      }
 
-    const newState = { ...prev, [normalizedAttr]: updated };
-    console.log("New selectedFilters state:", JSON.stringify(newState, null, 2));
-    return newState;
-  });
+      const newState = { ...prev, [normalizedAttr]: updated };
+      console.log("New selectedFilters state:", JSON.stringify(newState, null, 2));
+      return newState;
+    });
 
-  console.groupEnd();
-};
+    console.groupEnd();
+  };
 
   const clearAll = () => {
     setSelectedFilters({});
@@ -81,67 +81,50 @@ export default function Filter({
 
   return (
     <div className="mb-4 pt-10 w-80 min-w-[280px]">
-      <h1 className="text-2xl pb-2 font-bold">
-        {fromSlugToName(andToAmpersand(subCat))}
-      </h1>
-      <h2 className="mt-1 text-gray-600">
-        See more{" "}
-        <Link
-          className="font-bold cursor-pointer hover:underline"
-          href={`/products/${mainCat}`}
-        >
-          {fromSlugToName(andToAmpersand(mainCat))}
-        </Link>
-      </h2>
-
-      <h1 className="text-2xl pb-2 border-b border-gray-400 mt-8 font-bold">
+      <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
         Filters
       </h1>
 
       {/* Applied filters grouped by attribute */}
       {Object.keys(selectedFilters).length > 0 && (
-        <div className="mt-2 mb-4">
-          <div className="flex justify-between items-center mb-2 text-sm">
+        <div className="mt-4 border-b border-gray-400 pb-5">
+          <div className="flex justify-between items-center mb-4">
             <span className="font-semibold">
-              Applied filters (
+              Applied filters <span className="text-green-500">(
               {Object.values(selectedFilters).reduce(
                 (acc, arr) => acc + arr.length,
                 0
               )}
-              )
+              )</span>
             </span>
             <button
-              className="text-blue-600 underline hover:no-underline"
+              className="underline hover:no-underline cursor-pointer"
               onClick={clearAll}
             >
               Clear all
             </button>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             {products.map((filterData) => {
               const applied = selectedFilters[filterData.name] || [];
               if (applied.length === 0) return null;
 
               return (
-                <div key={filterData.name} className="flex flex-col gap-1">
-                  <span className="font-semibold text-sm">
-                    {filterData.name}
+                <div key={filterData.name} className="flex flex-col gap-4">
+                  <span className="font-semibold">
+                    {filterData.name}:
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-col gap-3">
                     {applied.map((option) => (
-                      <div
+                      <button
                         key={`${filterData.name}-${option.option}`}
-                        className="flex items-center gap-1 bg-gray-200 rounded px-2 py-1 text-sm"
+                        className="flex items-center gap-2 text-gray-800 border border-gray-600 w-full px-2 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => toggleOption(filterData.name, option)}
                       >
+                        <FaTimes />
                         <span>{option.option}</span>
-                        <button
-                          className="font-bold text-gray-600 hover:text-gray-800"
-                          onClick={() => toggleOption(filterData.name, option)}
-                        >
-                          ×
-                        </button>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -260,7 +243,7 @@ export default function Filter({
                               [filterData.name]: !prev[filterData.name],
                             }))
                           }
-                          className="text-sm text-blue-600 underline hover:no-underline transition-all"
+                          className="text-sm cursor-pointer underline hover:no-underline transition-all"
                         >
                           {isShowAll
                             ? `Show less ${filterData.name}`

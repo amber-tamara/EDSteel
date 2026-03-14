@@ -15,13 +15,15 @@ export default function ProductCard({
   const handleClick = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
+
   return (
-    <div className="grid gap-md lg:gap-lg max-md:gap-0 md:grid-cols-3 md:px-8">
+    <div>
+    <div className="flex flex-wrap items-start gap-3">
       {Array.isArray(products) &&
         products.map((product) => (
           <div
             key={product.id}
-            className="flex flex-col border border-transparent hover:border-gray-300 duration-200 p-4 hover:shadow-lg transition h-full min-h-[380px]"
+            className="flex flex-col border border-transparent hover:border-gray-300 duration-200 p-4 hover:shadow-xl transition flex-1 min-w-[250px] max-w-[300px]"
           >
             <Link
               href={`/products/${mainCat}/${subCat}/${product.slug}`}
@@ -30,19 +32,20 @@ export default function ProductCard({
               <img
                 src={product.img}
                 alt={product.name}
-                className="h-48 object-cover rounded-md md:m-auto"
+                className="w-full aspect-square object-contain rounded-md"
               />
               <h2 className="text-black mt-4 text-lg font-medium line-clamp-2">
                 {product.name}
               </h2>
             </Link>
-            <p className=" text-gray-700 text-xl font-bold">£{product.price}</p>
-            <div className="mt-auto flex items-end pt-4 justify-between">
+            <p className="text-gray-700 text-xl font-bold mt-2">£3.99{product.price}</p>
+            <div className="flex items-center justify-between pt-4 mt-auto">
               <Button label="Quick Add" onClick={handleClick} />
               <WishlistHeart />
             </div>
           </div>
         ))}
+    </div>
     </div>
   );
 }
