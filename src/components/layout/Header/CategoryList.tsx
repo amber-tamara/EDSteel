@@ -3,7 +3,7 @@ import { andToAmpersand } from "@/helpers/text";
 
 export default function CategoryList({ categories }: CategoryListProps) {
   return (
-    <nav className="bg-secondary-custom-teal items-center justify-center hidden lg:flex z-10">
+    <nav className="bg-secondary-custom-teal items-center justify-center hidden lg:flex z-10 text-white">
       <ul className="relative flex items-center justify-between">
         {categories &&
           categories?.map((item) => (

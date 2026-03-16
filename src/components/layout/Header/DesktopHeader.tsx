@@ -18,9 +18,9 @@ export default function DesktopHeader({ categories }: DesktopHeaderProps) {
       <div className="bg-primary-custom-teal px-15 py-4 flex justify-around h-1/2">
         <div className="flex w-screen items-center">
           <Image
-            src="/lol.svg"
+            src="/wordlogosmall.png"
             alt="Company Logo"
-            width={60}
+            width={160}
             height={10}
             className="lex-initial mr-2"
           />
@@ -40,7 +40,7 @@ export default function DesktopHeader({ categories }: DesktopHeaderProps) {
             </button>
           </form>
         </div>
-        <div className="flex">
+        <div className="flex text-white">
           <button className="flex flex-wrap items-center justify-center mr-6">
             <FaPhone size={20} />
             <h3>Contact</h3>

@@ -41,7 +41,7 @@ export default function ProductCard({
             <p className="text-gray-700 text-xl font-bold mt-2">£3.99{product.price}</p>
             <div className="flex items-center justify-between pt-4 mt-auto">
               <Button label="Quick Add" onClick={handleClick} />
-              <WishlistHeart />
+              <WishlistHeart productId={product.id}/>
             </div>
           </div>
         ))}
