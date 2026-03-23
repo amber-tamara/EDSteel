@@ -181,7 +181,7 @@ export default function Filter({
                             onChange={() =>
                               toggleOption(filterData.name, option)
                             }
-                            className="w-6 h-6 border-gray-300 accent-[#82a7a1]"
+                            className="w-6 h-6 border-gray-300 accent-[#117445]"
                           />
                           <label
                             htmlFor={`${filterData.name}-${option.option}`}
@@ -216,7 +216,7 @@ export default function Filter({
                               onChange={() =>
                                 toggleOption(filterData.name, option)
                               }
-                              className="w-6 h-6 border-gray-300 accent-[#82a7a1]"
+                              className="w-6 h-6 border-gray-300 accent-[#117445]"
                             />
                             <label
                               htmlFor={`${filterData.name}-${option.option}`}

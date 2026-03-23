@@ -1,11 +1,14 @@
 "use client";
-import ProductCard from "@/components/Products/ProductCard";
-import Filter from "@/components/Products/Filter";
-import Breadcrumbs from "@/components/ui/Breadcrumb";
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fromSlugToName, andToAmpersand } from "@/helpers/text";
 import Link from "next/link";
+import ProductCard from "@/components/Products/ProductCard";
+import Filter from "@/components/Products/Filter";
+import Breadcrumbs from "@/components/ui/Breadcrumb";
+import Button from "@/components/ui/Button";
+import BackToTopBtn from "@/components/ui/BackToTopBtn";
+
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
@@ -56,6 +59,8 @@ export default function SubCategoryPage() {
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
+  const handleClick = () => setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length))
+
   return (
     <div>
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
@@ -92,16 +97,12 @@ export default function SubCategoryPage() {
             </p>
 
             {visibleCount < filteredProducts.length && (
-              <button
-                onClick={() => setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length))}
-                className="px-6 py-3 border rounded-lg hover:bg-gray-100 transition"
-              >
-                Load more
-              </button>
+              <Button label="Load more" onClick={handleClick} />
             )}
           </div>
         </div>
       </div>
+      <BackToTopBtn/>
     </div>
   );
 }

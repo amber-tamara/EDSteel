@@ -1,4 +1,3 @@
-// components/WishlistHeart.tsx
 "use client";
 import { useState, useEffect } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";

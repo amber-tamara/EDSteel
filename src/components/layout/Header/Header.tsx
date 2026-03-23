@@ -19,9 +19,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header>
+    <header className="sticky top-0 z-50 lg:static">
       <DesktopHeader categories={categories} />
-      <MobileHeader categories={categories} />
+      <MobileHeader categories={categories}/>
     </header>
   );
 }

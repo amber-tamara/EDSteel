@@ -39,8 +39,8 @@ async function getProduct(slug: string) {
 
   const data = await res.json();
   let formattedVariants: any[] = [];
-  const variantIDs = data[0].meta_data[0].value;
-  if (variantIDs.length > 1) {
+  const variantIDs = data[0]?.meta_data[0]?.value;
+  if (variantIDs?.length > 1) {
     const variantIDsWithoutCurrent = variantIDs.filter(item => item !== data[0].id)
 
     // join IDs into comma-separated string
