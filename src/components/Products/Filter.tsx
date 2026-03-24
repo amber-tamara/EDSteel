@@ -80,7 +80,7 @@ export default function Filter({
   };
 
   return (
-    <div className="mb-4 pt-10 w-80 min-w-[280px]">
+    <div className="mb-4 pt-10 md:w-1/4 hidden lg:block">
       <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
         Filters
       </h1>

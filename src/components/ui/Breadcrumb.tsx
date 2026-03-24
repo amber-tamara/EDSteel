@@ -22,7 +22,7 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
   const currentStyle = "text-sm text-gray-600 cursor-default";
 
   return (
-    <ol className="flex items-center text-black space-x-2 pl-25">
+    <ol className="flex items-center text-black space-x-2 pt-3">
       
       {/* Home */}
       <li className="flex items-center">
