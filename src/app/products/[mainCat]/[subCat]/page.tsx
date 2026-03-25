@@ -64,10 +64,10 @@ export default function SubCategoryPage() {
   return (
     <div>
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
-      <h1 className="text-2xl pt-10 font-bold">
+      <h1 className="text-2xl pt-7 sm:pt-10 font-bold">
         {fromSlugToName(andToAmpersand(subCat))}
       </h1>
-      <h2 className="mt-1 text-gray-600">
+      <h2 className="mt-1 mb-10 lg:mb-0 text-gray-600">
         See more{" "}
         <Link
           className="font-bold cursor-pointer hover:underline"

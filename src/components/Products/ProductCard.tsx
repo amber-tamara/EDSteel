@@ -13,6 +13,7 @@ export default function ProductCard({
   subCat: string;
 }) {
   const handleClick = async () => {
+    console.log('hi')
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // TODO: add real "quick add to cart" logic here
   };
@@ -27,10 +28,10 @@ export default function ProductCard({
           >
             <Link
               href={`/products/${mainCat}/${subCat}/${product.slug}`}
-              className="flex flex-col flex-1"
+              className="flex sm:flex-col flex-1"
             >
               {/* Image container with hover zoom */}
-              <div className="relative overflow-hidden aspect-square bg-gray-50">
+              <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
                 <img
                   src={product.img}
                   alt={product.name}
@@ -39,29 +40,25 @@ export default function ProductCard({
               </div>
 
               {/* Content */}
-              <div className="p-4 flex flex-col flex-1">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-black transition-colors">
+              <div className="mx-4 sm:m-4 flex flex-col flex-1 justify-center">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
                   {product.name}
                 </h2>
 
                 <p className="mt-2 text-xl font-bold text-gray-900">
-                  £{product.price}
+                  £3.99
+                  {/* £{product.price} */}
                 </p>
-
-                {/* Push buttons to bottom */}
-                <div className="flex items-center justify-between mt-auto pt-4">
-                  <Button
-                    label="Quick Add"
-                    onClick={(e) => {
-                      e.preventDefault(); // prevent link navigation
-                      handleClick();
-                    }}
-                    className="flex-1 mr-2 text-sm"
-                  />
-                  <WishlistHeart productId={product.id} />
-                </div>
               </div>
             </Link>
+            <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
+                  <WishlistHeart productId={product.id} />
+                  <Button
+                    label="Add to Basket"
+                    onClick={handleClick}
+                    className="flex-1 mr-2 text-sm"
+                  />
+                </div>
           </div>
         ))}
     </div>

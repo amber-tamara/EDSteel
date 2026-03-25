@@ -27,23 +27,25 @@ export default function WishlistHeart({
   return (
     <button
       onClick={toggle}
-      className="group relative inline-flex items-center justify-center p-2 transition-all duration-200"
+      className="relative flex self-end w-10 items-center p-2 pb-3 cursor-pointer"
       aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
     >
       {/* Outline heart */}
       <FaRegHeart
-        className={`w-6 h-6 transition-colors duration-200
+        className={`transition-colors duration-200
           ${
             saved
               ? "text-green-600"
-              : "text-gray-500 group-hover:text-green-600"
+              : "text-gray-500 hover:text-green-600"
           }`}
+          size={25}
       />
 
       {/* Filled heart — perfectly centered on top */}
       <FaHeart
-        className={`absolute w-6 h-6 text-green-600 transition-opacity duration-200
+        className={`absolute text-green-600 transition-opacity duration-200
           ${saved ? "opacity-100" : "opacity-0"}`}
+          size={25}
       />
     </button>
   );
