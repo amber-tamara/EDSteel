@@ -20,6 +20,7 @@ export default function WishlistHeart({
     const updated = saved
       ? wishlist.filter((i: string) => i !== id)
       : [...wishlist, id];
+
     localStorage.setItem("wishlist", JSON.stringify(updated));
     setSaved(!saved);
   };
@@ -27,26 +28,26 @@ export default function WishlistHeart({
   return (
     <button
       onClick={toggle}
-      className="relative flex self-end w-10 items-center p-2 pb-3 cursor-pointer"
+      className="relative self-end p-2 cursor-pointer"
       aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
     >
-      {/* Outline heart */}
-      <FaRegHeart
-        className={`transition-colors duration-200
-          ${
-            saved
-              ? "text-green-600"
-              : "text-gray-500 hover:text-green-600"
-          }`}
-          size={25}
-      />
+      <div className="relative transition-transform duration-300 hover:scale-110 hover:!text-green-600 text-gray-500">
+        {/* Outline heart - hover color change */}
+        <FaRegHeart
+          className={`text-[28px] transition-colors duration-300
+            ${saved 
+              && "text-green-600" 
+            }`}
+            size={25}
+        />
 
-      {/* Filled heart — perfectly centered on top */}
-      <FaHeart
-        className={`absolute text-green-600 transition-opacity duration-200
-          ${saved ? "opacity-100" : "opacity-0"}`}
-          size={25}
-      />
+        {/* Filled heart overlay */}
+        <FaHeart
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[28px] text-green-600 transition-all duration-300
+            ${saved ? "opacity-100" : "opacity-0"}`}
+            size={25}
+        />
+      </div>
     </button>
   );
 }

@@ -5,9 +5,11 @@ import { useState } from "react";
 export default function Button({
   label,
   onClick,
+  className,
 }: {
   label: string;
   onClick?: () => Promise<void>;
+  className: string;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -25,9 +27,9 @@ export default function Button({
   return (
     <button
       onClick={handleClick}
-      className="px-7 py-3 rounded-[3.75rem] bg-white font-bold text-black border-2 border-black
+      className={`px-7 py-3 rounded-[3.75rem] bg-white font-bold text-black border-2 border-black
                  hover:bg-black hover:text-white hover:shadow-inner transition duration-200 cursor-pointer
-                items-center justify-center space-x-1 min-h-[50px] hidden sm:flex"
+                items-center justify-center space-x-1 min-h-[50px] ${className}`}
     >
       <div
         className={`absolute flex space-x-1.5 transition-opacity duration-200 ease-in-out

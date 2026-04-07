@@ -97,7 +97,7 @@ export default function SubCategoryPage() {
             </p>
 
             {visibleCount < filteredProducts.length && (
-              <Button label="Load more" onClick={handleClick} />
+              <Button label="Load more" onClick={handleClick} className="flex w-full sm:w-1/3"/>
             )}
           </div>
         </div>

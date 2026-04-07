@@ -56,7 +56,7 @@ export default function ProductCard({
                   <Button
                     label="Add to Basket"
                     onClick={handleClick}
-                    className="flex-1 mr-2 text-sm"
+                    className="sm:flex hidden"
                   />
                 </div>
           </div>
