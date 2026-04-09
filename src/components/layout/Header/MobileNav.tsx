@@ -1,7 +1,7 @@
-"use client";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { useState } from "react";
-import Image from "next/image";
+'use client';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { useState } from 'react';
+import Image from 'next/image';
 
 export default function MobileNav({ categories }: MobileNavProps) {
   const [Open, setOpen] = useState(false);
@@ -30,15 +30,16 @@ export default function MobileNav({ categories }: MobileNavProps) {
           </button>
 
           <ul className="mt-24 flex flex-col divide-y divide-[#82a7a1]">
-            {categories.map((item, index) => (
-              <li
-                key={index}
-                className="px-4 py-2 cursor-pointer focus:bg-[#82a7a1]"
-                tabIndex={0}
-              >
-                {item}
-              </li>
-            ))}
+            {categories &&
+              categories.map((item, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 cursor-pointer focus:bg-[#82a7a1]"
+                  tabIndex={0}
+                >
+                  {item}
+                </li>
+              ))}
           </ul>
         </div>
       )}

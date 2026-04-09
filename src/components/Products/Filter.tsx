@@ -1,7 +1,6 @@
-"use client";
-import { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import Link from "next/link";
+'use client';
+import { useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 
 interface FilterOption {
   option: string;
@@ -28,7 +27,9 @@ export default function Filter({
   selectedFilters,
   setSelectedFilters,
 }: FilterProps) {
-  const [expandedAttrs, setExpandedAttrs] = useState<Record<string, boolean>>({});
+  const [expandedAttrs, setExpandedAttrs] = useState<Record<string, boolean>>(
+    {},
+  );
   const [showAll, setShowAll] = useState<Record<string, boolean>>({}); // per attribute
 
   const toggleExpand = (attrName: string) => {
@@ -42,33 +43,50 @@ export default function Filter({
     const normalizedAttr = attrName.trim();
     const normalizedOption = option.option.trim();
 
-    console.group(`Toggling option: ${normalizedOption} in group: ${normalizedAttr}`);
+    console.group(
+      `Toggling option: ${normalizedOption} in group: ${normalizedAttr}`,
+    );
 
     setSelectedFilters((prev) => {
-      console.log("Previous selectedFilters:", JSON.stringify(prev, null, 2));
+      console.log('Previous selectedFilters:', JSON.stringify(prev, null, 2));
 
       const current = prev[normalizedAttr] || [];
       const exists = current.some((o) => o.option.trim() === normalizedOption);
-      console.log("Current options in this group:", current.map(o => o.option));
-      console.log("Exists already?", exists);
+      console.log(
+        'Current options in this group:',
+        current.map((o) => o.option),
+      );
+      console.log('Exists already?', exists);
 
       let updated: FilterOption[];
       if (exists) {
         updated = current.filter((o) => o.option.trim() !== normalizedOption);
-        console.log("Updated options after removal:", updated.map(o => o.option));
+        console.log(
+          'Updated options after removal:',
+          updated.map((o) => o.option),
+        );
       } else {
         updated = [...current, { ...option, option: normalizedOption }];
-        console.log("Updated options after addition:", updated.map(o => o.option));
+        console.log(
+          'Updated options after addition:',
+          updated.map((o) => o.option),
+        );
       }
 
       if (updated.length === 0) {
         const { [normalizedAttr]: _, ...rest } = prev;
-        console.log("Group empty, removing group key. Rest of state:", JSON.stringify(rest, null, 2));
+        console.log(
+          'Group empty, removing group key. Rest of state:',
+          JSON.stringify(rest, null, 2),
+        );
         return rest;
       }
 
       const newState = { ...prev, [normalizedAttr]: updated };
-      console.log("New selectedFilters state:", JSON.stringify(newState, null, 2));
+      console.log(
+        'New selectedFilters state:',
+        JSON.stringify(newState, null, 2),
+      );
       return newState;
     });
 
@@ -90,12 +108,15 @@ export default function Filter({
         <div className="mt-4 border-b border-gray-400 pb-5">
           <div className="flex justify-between items-center mb-4">
             <span className="font-semibold">
-              Applied filters <span className="text-green-500">(
-              {Object.values(selectedFilters).reduce(
-                (acc, arr) => acc + arr.length,
-                0
-              )}
-              )</span>
+              Applied filters{' '}
+              <span className="text-green-500">
+                (
+                {Object.values(selectedFilters).reduce(
+                  (acc, arr) => acc + arr.length,
+                  0,
+                )}
+                )
+              </span>
             </span>
             <button
               className="underline hover:no-underline cursor-pointer"
@@ -112,9 +133,7 @@ export default function Filter({
 
               return (
                 <div key={filterData.name} className="flex flex-col gap-4">
-                  <span className="font-semibold">
-                    {filterData.name}:
-                  </span>
+                  <span className="font-semibold">{filterData.name}:</span>
                   <div className="flex flex-col gap-3">
                     {applied.map((option) => (
                       <button
@@ -157,8 +176,9 @@ export default function Filter({
                 >
                   {filterData.name}
                   <span
-                    className={`inline-block w-2 h-2 border-t-1 border-r-1 border-black transition-transform duration-200 ${isExpanded ? "rotate-135" : "-rotate-45"
-                      }`}
+                    className={`inline-block w-2 h-2 border-t-1 border-r-1 border-black transition-transform duration-200 ${
+                      isExpanded ? 'rotate-135' : '-rotate-45'
+                    }`}
                   />
                 </button>
                 {isExpanded && (
@@ -167,7 +187,7 @@ export default function Filter({
                     {firstFive.map((option) => {
                       const isSelected =
                         selectedFilters[filterData.name]?.some(
-                          (o) => o.option.trim() === option.option.trim()
+                          (o) => o.option.trim() === option.option.trim(),
                         ) ?? false;
 
                       const count = option.productIds.length;
@@ -185,8 +205,9 @@ export default function Filter({
                           />
                           <label
                             htmlFor={`${filterData.name}-${option.option}`}
-                            className={`ml-2 cursor-pointer text-sm ${isSelected ? "font-medium" : "text-gray-700"
-                              } transition-colors flex-1`}
+                            className={`ml-2 cursor-pointer text-sm ${
+                              isSelected ? 'font-medium' : 'text-gray-700'
+                            } transition-colors flex-1`}
                           >
                             {option.option}
                             <span className="text-xs text-gray-500 ml-1.5">
@@ -202,7 +223,7 @@ export default function Filter({
                       remaining.map((option) => {
                         const isSelected =
                           selectedFilters[filterData.name]?.some(
-                            (o) => o.option === option.option
+                            (o) => o.option === option.option,
                           ) ?? false;
 
                         const count = option.productIds.length;
@@ -220,8 +241,9 @@ export default function Filter({
                             />
                             <label
                               htmlFor={`${filterData.name}-${option.option}`}
-                              className={`ml-2 cursor-pointer text-sm ${isSelected ? "font-medium" : "text-gray-700"
-                                } transition-colors flex-1`}
+                              className={`ml-2 cursor-pointer text-sm ${
+                                isSelected ? 'font-medium' : 'text-gray-700'
+                              } transition-colors flex-1`}
                             >
                               {option.option}
                               <span className="text-xs text-gray-500 ml-1.5">

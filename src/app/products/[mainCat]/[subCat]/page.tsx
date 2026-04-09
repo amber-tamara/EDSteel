@@ -1,21 +1,23 @@
-"use client";
-import { useState, useEffect, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fromSlugToName, andToAmpersand } from "@/helpers/text";
-import Link from "next/link";
-import ProductCard from "@/components/Products/ProductCard";
-import Filter from "@/components/Products/Filter";
-import Breadcrumbs from "@/components/ui/Breadcrumb";
-import Button from "@/components/ui/Button";
-import BackToTopBtn from "@/components/ui/BackToTopBtn";
-
+'use client';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { fromSlugToName, andToAmpersand } from '@/helpers/text';
+import Link from 'next/link';
+import ProductCard from '@/components/Products/ProductCard';
+import Filter from '@/components/Products/Filter';
+import Breadcrumbs from '@/components/ui/Breadcrumb';
+import Button from '@/components/ui/Button';
+import BackToTopBtn from '@/components/ui/BackToTopBtn';
+import FilterButton from '@/components/Products/FilterButton';
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
   const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
   const [attributes, setAttributes] = useState<any[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>({});
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>(
+    {},
+  );
   const [visibleCount, setVisibleCount] = useState(48);
 
   useEffect(() => {
@@ -59,23 +61,29 @@ export default function SubCategoryPage() {
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
-  const handleClick = () => setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length))
+  const handleClick = () =>
+    setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length));
 
   return (
     <div>
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
-      <h1 className="text-2xl pt-7 sm:pt-10 font-bold">
-        {fromSlugToName(andToAmpersand(subCat))}
-      </h1>
-      <h2 className="mt-1 mb-10 lg:mb-0 text-gray-600">
-        See more{" "}
-        <Link
-          className="font-bold cursor-pointer hover:underline"
-          href={`/products/${mainCat}`}
-        >
-          {fromSlugToName(andToAmpersand(mainCat))}
-        </Link>
-      </h2>
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-2xl pt-7 sm:pt-10 font-bold">
+            {fromSlugToName(andToAmpersand(subCat))}
+          </h1>
+          <h2 className="mt-1 mb-10 lg:mb-0 text-gray-600">
+            See more{' '}
+            <Link
+              className="font-bold cursor-pointer hover:underline"
+              href={`/products/${mainCat}`}
+            >
+              {fromSlugToName(andToAmpersand(mainCat))}
+            </Link>
+          </h2>
+        </div>
+        <FilterButton selectedFilters={selectedFilters} />
+      </div>
       <div className="flex gap-6">
         <Filter
           mainCat={mainCat}
@@ -93,16 +101,21 @@ export default function SubCategoryPage() {
 
           <div className="flex flex-col items-center mt-10 gap-4">
             <p className="text-gray-600">
-              Showing {Math.min(visibleCount, filteredProducts.length)} of {filteredProducts.length}
+              Showing {Math.min(visibleCount, filteredProducts.length)} of{' '}
+              {filteredProducts.length}
             </p>
 
             {visibleCount < filteredProducts.length && (
-              <Button label="Load more" onClick={handleClick} className="flex w-full sm:w-1/3"/>
+              <Button
+                label="Load more"
+                onClick={handleClick}
+                className="flex w-full sm:w-1/3"
+              />
             )}
           </div>
         </div>
       </div>
-      <BackToTopBtn/>
+      <BackToTopBtn />
     </div>
   );
 }
