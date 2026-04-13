@@ -26,6 +26,7 @@ export default function Filter({
   products = [],
   selectedFilters,
   setSelectedFilters,
+  isVisible,
 }: FilterProps) {
   const [expandedAttrs, setExpandedAttrs] = useState<Record<string, boolean>>(
     {},
@@ -98,7 +99,7 @@ export default function Filter({
   };
 
   return (
-    <div className="mb-4 pt-10 md:w-1/4 hidden lg:block">
+    <div className={`mb-4 lg:pt-10 lg:w-1/4 ${isVisible}`}>
       <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
         Filters
       </h1>

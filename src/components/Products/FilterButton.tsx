@@ -1,24 +1,31 @@
 'use client';
 import { FaFilter } from 'react-icons/fa';
 
-export default function FilterButton({ selectedFilters }: FilterButton) {
-  console.log(selectedFilters);
+export default function FilterButton({
+  selectedFilters,
+  onOpen,
+}: FilterButtonProps) {
+  const count = Object.values(selectedFilters).reduce(
+    (acc, arr) => acc + arr.length,
+    0,
+  );
+
   return (
-    <div className="flex self-end mb-10 block lg:hidden">
+    <button
+      onClick={onOpen}
+      className="flex items-center gap-1 self-end mb-10 lg:hidden"
+    >
       <FaFilter size={20} />
       <span className="font-semibold">
-        {' '}
-        Filter{' '}
-        <span className="text-green-500">
-          {Object.keys(selectedFilters).length > 0 &&
-            `(${Object.values(selectedFilters).reduce(
-              (acc, arr) => acc + arr.length,
-              0,
-            )})`}
-        </span>
+        Filter {count > 0 && <span className="text-green-500">({count})</span>}
       </span>
-    </div>
+    </button>
   );
+}
+
+interface FilterOption {
+  option: string;
+  productIds: number[];
 }
 
 interface AttributeFilter {
@@ -27,7 +34,7 @@ interface AttributeFilter {
   options: FilterOption[];
 }
 
-interface FilterButton {
-  products?: AttributeFilter[];
+interface FilterButtonProps {
   selectedFilters: Record<string, FilterOption[]>;
+  onOpen: () => void;
 }

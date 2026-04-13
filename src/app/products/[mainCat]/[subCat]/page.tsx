@@ -9,6 +9,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumb';
 import Button from '@/components/ui/Button';
 import BackToTopBtn from '@/components/ui/BackToTopBtn';
 import FilterButton from '@/components/Products/FilterButton';
+import FilterNav from '@/components/Products/FilterNav';
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
@@ -19,6 +20,7 @@ export default function SubCategoryPage() {
     {},
   );
   const [visibleCount, setVisibleCount] = useState(48);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   useEffect(() => {
     if (subCat) {
@@ -82,7 +84,18 @@ export default function SubCategoryPage() {
             </Link>
           </h2>
         </div>
-        <FilterButton selectedFilters={selectedFilters} />
+        <FilterButton
+          selectedFilters={selectedFilters}
+          onOpen={() => setFilterOpen(true)}
+        />
+
+        <FilterNav
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
+          products={attributes}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+        />
       </div>
       <div className="flex gap-6">
         <Filter
@@ -91,6 +104,7 @@ export default function SubCategoryPage() {
           products={attributes}
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
+          isVisible="lg:block hidden"
         />
         <div className="flex-1 flex flex-col">
           <ProductCard
