@@ -15,7 +15,7 @@ export default function Footer() {
             <h3 className="font-semibold mb-3">Help</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/delivery" className="hover:underline">
+                <Link href="/delivery-returns" className="hover:underline">
                   Delivery & Returns
                 </Link>
               </li>
