@@ -23,11 +23,11 @@ export default function DesktopHeader({ categories }: DesktopHeaderProps) {
             alt="Company Logo"
             width={160}
             height={10}
-            className="lex-initial mr-2"
+            className="lex-initial mr-3"
           />
           <form
             onSubmit={handleSearch}
-            className="flex h-full flex-grow max-w-[37.75rem] bg-white shadow-md overflow-hidden border border-black-300 focus-within:border-green-200"
+            className="rounded-lg flex h-full flex-grow max-w-[37.75rem] bg-white shadow-md overflow-hidden border border-black-300 focus-within:border-green-200"
           >
             <input
               type="text"
