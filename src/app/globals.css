@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -32,7 +32,7 @@ body {
 } */
 
 .bg-primary-custom-teal {
-  background-color: #117445;
+  background-color: #0f532d;
 }
 
 .primary-custom-teal {
@@ -40,5 +40,5 @@ body {
 }
 
 .bg-secondary-custom-teal {
-  background-color: #15803d;
+  background-color: #165f3e;
 }

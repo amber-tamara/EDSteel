@@ -1,11 +1,11 @@
-"use client";
-import { useState } from "react";
-import Image from "next/image";
-import { FaPhone, FaSearch, FaShoppingBasket, FaUser } from "react-icons/fa";
-import MobileNav from "./MobileNav";
+'use client';
+import { useState } from 'react';
+import Image from 'next/image';
+import { FaPhone, FaSearch, FaShoppingBasket, FaUser } from 'react-icons/fa';
+import MobileNav from './MobileNav';
 
 export default function MobileHeader({ categories }: MobileHeaderProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,12 +42,12 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
         >
           <input
             type="text"
-            placeholder="Search for anything here..."
+            placeholder="Search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-grow px-4 py-2 text-gray-700 focus:outline-none"
           />
-          <button className="mr-4" type="submit">
+          <button className="mr-4 cursor-pointer" type="submit">
             <FaSearch size={24} className="text-gray-600" />
           </button>
         </form>

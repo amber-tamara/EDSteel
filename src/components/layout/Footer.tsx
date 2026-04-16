@@ -62,10 +62,10 @@ export default function Footer() {
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block hover:text-green-100 transition"
+          className="inline-block hover:scale-105 transition"
           aria-label="Facebook"
         >
-          <FaFacebook size={28} />
+          <FaFacebook size={31} />
         </a>
       </div>
     </footer>
