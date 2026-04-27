@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button';
 import BackToTopBtn from '@/components/ui/BackToTopBtn';
 import FilterButton from '@/components/Products/FilterButton';
 import FilterNav from '@/components/Products/FilterNav';
+import LoadingBar from '@/components/ui/LoadingBar';
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
@@ -21,19 +22,24 @@ export default function SubCategoryPage() {
   );
   const [visibleCount, setVisibleCount] = useState(48);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (subCat) {
-      fetch(`/api/subProducts/${subCat}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setProducts(data.products || []);
-          setAttributes(data.attributes || []);
-        })
-        .catch(console.error);
-    }
-  }, [subCat]);
+    if (!subCat) return;
 
+    setLoading(true);
+
+    fetch(`/api/subProducts/${subCat}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products || []);
+        setAttributes(data.attributes || []);
+      })
+      .catch(console.error)
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [subCat]);
   const filteredProducts = useMemo(() => {
     if (Object.keys(selectedFilters).length === 0) return products;
 
@@ -66,8 +72,10 @@ export default function SubCategoryPage() {
   const handleClick = () =>
     setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length));
 
-  return (
-    <div>
+  return loading ? (
+    <LoadingBar />
+  ) : (
+    <div className="md:overscroll-none">
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
       <div className="flex justify-between">
         <div>
