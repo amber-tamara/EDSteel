@@ -12,7 +12,7 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
     // TODO: trigger your search logic here
   };
   return (
-    <div className="relative text-white">
+    <div className="text-white">
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
         <div className="flex justify-between">
           <MobileNav categories={categories} />

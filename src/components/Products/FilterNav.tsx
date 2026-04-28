@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import Filter from '@/components/Products/Filter';
 import Button from '../ui/Button';
-import ProductCard from './ProductCard';
 
 export default function FilterNav({
   open,
@@ -50,7 +49,7 @@ export default function FilterNav({
       {/* Overlay */}
       <div
         onClick={onClose}
-        className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/70 transition-opacity duration-300 cursor-pointer ${
           open ? 'opacity-100' : 'opacity-0'
         }`}
       />
@@ -64,7 +63,7 @@ export default function FilterNav({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 -right-10 z-50 text-white"
+          className="absolute top-4 -right-10 z-50 text-white cursor-pointer"
         >
           <FaTimes size={32} />
         </button>
