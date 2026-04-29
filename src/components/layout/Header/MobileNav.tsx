@@ -19,7 +19,7 @@ export default function MobileNav({ categories }: MobileNavProps) {
       {/* OPEN BUTTON */}
       <button
         onClick={handleToggle}
-        className="flex flex-col items-center justify-center ml-1.5"
+        className="flex flex-col items-center justify-center ml-1.5 cursor-pointer"
       >
         <FaBars size={20} />
         <h3 className="text-sm sm:text-base mt-0.5">Menu</h3>

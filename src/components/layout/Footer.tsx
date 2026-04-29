@@ -5,9 +5,9 @@ import { FaFacebook } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-custom-teal text-white">
+    <footer className="bg-secondary-custom-teal text-white">
       {/* CONTENT */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="sm:px-5 lg:px-15 py-6">
         {/* TOP GRID */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8 text-sm">
           {/* Help */}
@@ -50,12 +50,8 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* FULL WIDTH GRADIENT DIVIDER */}
-      <div className="w-full h-[0.5px] bg-white/40" />
-
       {/* BOTTOM BAR */}
-      <div className="max-w-7xl mx-auto px-6 py-4 text-sm flex flex-col md:flex-row items-center justify-between gap-2">
+      <div className="px-15 py-4 text-sm flex flex-col md:flex-row items-center justify-between gap-2 bg-primary-custom-teal">
         <span>© E&DSteel 2026</span>
 
         <a

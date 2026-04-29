@@ -13,7 +13,7 @@ export default function FilterButton({
   return (
     <button
       onClick={onOpen}
-      className="flex items-center gap-1 self-end mb-10 lg:hidden"
+      className="flex items-center gap-1 self-end mb-10 lg:hidden cursor-pointer"
     >
       <FaFilter size={20} />
       <span className="font-semibold">
