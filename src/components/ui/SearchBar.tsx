@@ -9,10 +9,11 @@ export default function SearchBar() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔍 Live search (debounced)
   useEffect(() => {
+    const controller = new AbortController();
+
     const timeout = setTimeout(async () => {
-      if (!query.trim()) {
+      if (!query.trim() || query.length < 3) {
         setResults([]);
         return;
       }
@@ -22,44 +23,34 @@ export default function SearchBar() {
 
         const res = await fetch(
           `/api/searchProducts?q=${encodeURIComponent(query)}`,
+          {
+            signal: controller.signal,
+          },
         );
 
         if (!res.ok) throw new Error('Search failed');
 
         const data = await res.json();
         setResults(data);
-      } catch (err) {
-        console.error(err);
+
+        console.log(data);
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
+          console.error(err);
+        }
       } finally {
         setLoading(false);
       }
     }, 400);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [query]);
 
-  // 🔍 Submit search (Enter key)
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!query.trim()) return;
-
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `/api/searchProducts?q=${encodeURIComponent(query)}`,
-      );
-
-      if (!res.ok) throw new Error('Search failed');
-
-      const data = await res.json();
-      setResults(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -92,17 +83,8 @@ export default function SearchBar() {
         </button>
       </form>
 
-      {/* RESULTS */}
-      {query && (
+      {query.length >= 3 && results.length > 1 && (
         <div className="absolute top-full left-0 w-full bg-white border border-gray-200 shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
-          {loading && (
-            <div className="p-3 text-sm text-gray-500">Searching...</div>
-          )}
-
-          {!loading && results.length === 0 && (
-            <div className="p-3 text-sm text-gray-500">No results found</div>
-          )}
-
           {!loading &&
             results
               .filter((item: any) => item?.url) // 🛡 prevents crash

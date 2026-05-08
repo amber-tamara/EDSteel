@@ -30,13 +30,12 @@ export async function GET(req: Request) {
       },
     );
 
-    console.log(res);
-
     if (!res.ok) {
       throw new Error('WooCommerce search failed');
     }
 
     const data = await res.json();
+    console.log(data);
 
     const enriched = data.map((product: any) => {
       const mainCat = product.categories?.[0]?.slug || 'uncategorized';
