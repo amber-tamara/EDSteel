@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -51,6 +53,10 @@ export default function SearchBar() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!query.trim()) return;
+
+    router.push(`/search?term=${encodeURIComponent(query)}`);
   };
 
   return (
@@ -78,7 +84,11 @@ export default function SearchBar() {
           </button>
         )}
 
-        <button type="submit" className="mr-4 flex items-center">
+        <button
+          type="submit"
+          onClick={handleSearch}
+          className="mr-4 flex items-center"
+        >
           <FaSearch size={20} className="text-gray-600" />
         </button>
       </form>

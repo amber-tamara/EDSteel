@@ -35,7 +35,7 @@ export async function GET(req: Request) {
     }
 
     const data = await res.json();
-    console.log(data);
+    console.log(data.categories);
 
     const enriched = data.map((product: any) => {
       const mainCat = product.categories?.[0]?.slug || 'uncategorized';
