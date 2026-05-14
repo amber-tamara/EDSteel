@@ -1,14 +1,14 @@
-export default function SearchPage({
+export default async function SearchPage({
   searchParams,
 }: {
   searchParams: { term?: string };
 }) {
-  const term = searchParams.term;
+  const param = await searchParams;
 
   return (
     <div>
       <h1>Search Results</h1>
-      <p>{term}</p>
+      <p>{param.term}</p>
     </div>
   );
 }
