@@ -36,18 +36,19 @@ export async function GET(req: Request) {
     }
 
     const data = await res.json();
-    console.log(data.categories);
+    // console.log(data);
 
     const enriched = data.map((product: any) => {
-      const mainCat = product.categories?.[0]?.slug || 'uncategorized';
-      const subCat = product.categories?.[1]?.slug || 'general';
-
+      const subCat = product.categories?.[0]?.slug || 'uncategorized';
+      const mainCat = 'departments';
+      // console.log(subCat);
       return {
-        ...product,
+        name: product.name,
+        id: product.id,
         url: `/products/${mainCat}/${subCat}/${product.slug}`,
       };
     });
-
+    console.log(enriched);
     return NextResponse.json(enriched);
   } catch (err) {
     console.error(err);

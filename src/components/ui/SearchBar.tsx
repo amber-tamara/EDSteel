@@ -34,6 +34,7 @@ export default function SearchBar() {
   }, []);
 
   useEffect(() => {
+    setResults([]);
     const controller = new AbortController();
     const timeout = setTimeout(async () => {
       if (!query.trim() || query.length < 3) {
@@ -53,12 +54,11 @@ export default function SearchBar() {
         setResults(data);
       } catch (err: any) {
         if (err.name !== 'AbortError') {
-          console.error(err);
         }
       } finally {
         // setLoading(false);
       }
-    }, 400);
+    }, 150);
 
     return () => {
       clearTimeout(timeout);
@@ -81,7 +81,6 @@ export default function SearchBar() {
 
     router.push(url);
   };
-  console.log(results);
 
   return (
     <div ref={searchRef} className="relative w-full">
@@ -115,7 +114,7 @@ export default function SearchBar() {
       </form>
       {/* DROPDOWN */}
       {query.length >= 3 && results.length > 0 && result && (
-        <div className="absolute top-full left-0 w-full bg-white border border-gray-200 shadow-lg mt-1 z-50 max-h-80 overflow-y-auto rounded-md">
+        <div className="lg:max-w-[37.75rem] w-full absolute top-full left-0 bg-white border border-gray-200 shadow-lg z-50 rounded-2xl">
           {results
             .filter((item: any) => item?.url)
             .map((item: any) => (

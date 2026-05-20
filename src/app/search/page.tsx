@@ -1,14 +1,11 @@
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: { term?: string };
-}) {
-  const param = await searchParams;
+import SearchResults from '@/components/Products/SearchResults';
 
-  return (
-    <div>
-      <h1>Search Results</h1>
-      <p>{param.term}</p>
-    </div>
-  );
+export default async function SearchPage({ searchParams }) {
+  const term = searchParams.term;
+
+  const res = await fetch(`http://localhost:3000/api/searchProducts?q=${term}`);
+
+  const results = await res.json();
+
+  return <SearchResults term={term} results={results} />;
 }
