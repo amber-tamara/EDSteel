@@ -17,7 +17,6 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
   const linkStyle = 'text-sm cursor-pointer hover:underline';
   const currentStyle = 'text-sm text-gray-600 cursor-default';
 
-  // NON-product pages (like /terms, /privacy)
   if (!isProductPage) {
     const pageName = pathname.replace('/', '');
 
@@ -38,7 +37,6 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
     );
   }
 
-  // PRODUCT breadcrumbs (your original logic)
   const mainPath = `/products/${mainCat}`;
   const subPath = `/products/${mainCat}/${subCat}`;
 

@@ -1,9 +1,8 @@
-"use client";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import CategoryOverview from "@/components/Products/CategoryOverview";
-import Breadcrumbs from "@/components/ui/Breadcrumb";
-import Link from "next/link";
+'use client';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import CategoryOverview from '@/components/Products/CategoryOverview';
+import Breadcrumbs from '@/components/ui/Breadcrumb';
 
 export default function MainCategoryPage() {
   const { mainCat } = useParams(); // "electronics"
@@ -15,7 +14,7 @@ export default function MainCategoryPage() {
     fetch(`/api/products/${mainCat}`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Failed to fetch sub categories");
+          throw new Error('Failed to fetch sub categories');
         }
         return res.json();
       })
@@ -24,33 +23,15 @@ export default function MainCategoryPage() {
       })
       .catch((err) => {
         console.error(err);
-        setSubCategories([])
+        setSubCategories([]);
       });
-    }, [mainCat])
+  }, [mainCat]);
 
-    return (
-      <div className="text-black">
-        {/* <div className="pl-4 pt-4 pb-1.5">
-          <Link
-            href="/"
-            className="relative bg-left-bottom bg-gradient-to-r from-green-500 to-green-500 bg-[length:0%_2px] bg-no-repeat hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
-          >
-            Home
-          </Link>
-          <span> &gt; </span>
-          <span
-            className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-primary-custom-teal after:transition-all after:duration-300 hover:after:w-full cursor-pointer"
-            onClick={
-              () => console.log("hiya")
-              // router.push(`/products/${mainCat}?mainCatId=${mainCatId}`)
-            }
-          >
-            {mainCat}
-          </span>
-        </div> */}
-        <Breadcrumbs mainCat={mainCat}/>
-        <h1 className="pb-1.5 text-4xl font-bold pl-4 pt-4">{mainCat}</h1>
-        <CategoryOverview mainCat={mainCat} subCategories={subCategories} />
-      </div>
-    );
-  }
+  return (
+    <div className="text-black">
+      <Breadcrumbs mainCat={mainCat} />
+      <h1 className="text-4xl font-bold py-6">{mainCat}</h1>
+      <CategoryOverview mainCat={mainCat} subCategories={subCategories} />
+    </div>
+  );
+}

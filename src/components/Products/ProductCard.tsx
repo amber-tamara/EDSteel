@@ -1,7 +1,7 @@
-"use client";
-import Link from "next/link";
-import Button from "@/components/ui/Button";
-import WishlistHeart from "../ui/WishlistHeart";
+'use client';
+import Link from 'next/link';
+import Button from '@/components/ui/Button';
+import WishlistHeart from '../ui/WishlistHeart';
 
 export default function ProductCard({
   products,
@@ -13,7 +13,7 @@ export default function ProductCard({
   subCat: string;
 }) {
   const handleClick = async () => {
-    console.log('hi')
+    console.log('hi');
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // TODO: add real "quick add to cart" logic here
   };
@@ -30,7 +30,6 @@ export default function ProductCard({
               href={`/products/${mainCat}/${subCat}/${product.slug}`}
               className="flex sm:flex-col flex-1"
             >
-              {/* Image container with hover zoom */}
               <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
                 <img
                   src={product.img}
@@ -52,13 +51,13 @@ export default function ProductCard({
               </div>
             </Link>
             <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
-                  <WishlistHeart productId={product.id} />
-                  <Button
-                    label="Add to Basket"
-                    onClick={handleClick}
-                    className="sm:flex hidden"
-                  />
-                </div>
+              <WishlistHeart productId={product.id} />
+              <Button
+                label="Add to Basket"
+                onClick={handleClick}
+                className="sm:flex hidden"
+              />
+            </div>
           </div>
         ))}
     </div>
