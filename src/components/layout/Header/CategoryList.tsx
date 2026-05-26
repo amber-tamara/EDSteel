@@ -11,7 +11,9 @@ export default function CategoryList({ categories }: CategoryListProps) {
               key={item.mainCat}
               className="hover:bg-white hover:text-black py-5 px-3 group cursor-pointer relative"
             >
-              <Link href={`/products/${item.mainCatSlug}`}>{item.mainCat}</Link>
+              <Link href={`/products/${item.mainCatSlug}`}>
+                {andToAmpersand(item.mainCat)}
+              </Link>
 
               <ul className="absolute top-full left-0 hidden group-hover:flex flex-col bg-white shadow-2xl py-5 px-3 w-64 text-black">
                 {item.subCats.map((sub) => (

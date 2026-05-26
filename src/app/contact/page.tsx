@@ -40,7 +40,6 @@ export default function ContactPage() {
         <h1 className="font-semibold text-4xl pt-4">Contact Us</h1>
       </div>
       <div className="mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
-        {/* LEFT SIDE - INFO */}
         <div className="space-y-6 bg-white border rounded-2xl p-6">
           <div>
             <h2 className="font-semibold text-xl border-b pb-4">
@@ -86,7 +85,6 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* RIGHT SIDE - FORM */}
         <form
           onSubmit={handleSubmit}
           className="bg-white border rounded-2xl p-6 space-y-6 shadow-sm"

@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import Button from '../ui/Button';
+import { useRouter } from 'next/navigation';
 
 export default function CategoryOverview({
   mainCat,
@@ -12,6 +14,11 @@ export default function CategoryOverview({
     products: Array<{ name: string; image: string | null }>;
   }>;
 }) {
+  const router = useRouter();
+  const handleClick = (url) => {
+    router.push(url);
+  };
+
   return (
     <div className="text-black pb-6">
       {subCategories &&
@@ -22,7 +29,7 @@ export default function CategoryOverview({
             {/* Products container */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-8">
               {item.products.map((product) => (
-                <div className="flex flex-col items-center cursor-pointer aspect-square flex-1">
+                <div className="flex flex-col items-center aspect-square flex-1">
                   <img
                     className="object-scale-down"
                     src={product.image ?? '/placeholder.png'}
@@ -35,14 +42,13 @@ export default function CategoryOverview({
               ))}
             </div>
 
-            <div className="flex justify-center p-8">
-              <Link
-                className="font-semibold text-white bg-primary-custom-teal px-6 py-2 text-center no-underline hover:![background-color:oklch(40.5%_0.101_131.063)] transition-all duration-300 ease-in-out"
-                href={`/products/${mainCat}/${item.subCatName}`}
-              >
-                Shop all {decodeURIComponent(item.subCatName)}
-              </Link>
-            </div>
+            <Button
+              label={decodeURIComponent(item.subCatName)}
+              className="w-full sm:w-1/3 lg:w-1/4 flex self-center text-black"
+              onClick={() =>
+                handleClick(`/products/${mainCat}/${item.subCatSlug}`)
+              }
+            ></Button>
           </div>
         ))}
     </div>
