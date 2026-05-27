@@ -16,7 +16,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
 
   return (
     <div className="flex">
-      {/* OPEN BUTTON */}
       <button
         onClick={handleToggle}
         className="flex flex-col items-center justify-center ml-1.5 cursor-pointer"
@@ -25,7 +24,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
         <h3 className="text-sm sm:text-base mt-0.5">Menu</h3>
       </button>
 
-      {/* OVERLAY */}
       <div
         onClick={handleToggle}
         className={`fixed inset-0 bg-black/70 transition-opacity duration-300 cursor-pointer ${
@@ -33,10 +31,8 @@ export default function MobileNav({ categories }: MobileNavProps) {
         }`}
       />
 
-      {/* DRAWER */}
       {open && (
         <div className="w-[calc(100%-44px)] absolute top-0 left-0 md:w-1/2 max-w-sm h-screen bg-white text-black shadow-md flex flex-col">
-          {/* CLOSE BUTTON (fixed positioning, always visible) */}
           <button
             onClick={handleToggle}
             className="absolute top-4 -right-10 z-50 text-white cursor-pointer"
@@ -44,7 +40,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
             <FaTimes size={24} />
           </button>
 
-          {/* HEADER (no scroll) */}
           <div className="shrink-0 flex items-center border-b border-[#82a7a1] grid grid-cols-2">
             <p className="h-full py-3 pl-4 pr-0 border-r border-gray-200 cursor-pointer hover:underline">
               Sign In
@@ -54,7 +49,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
             </p>
           </div>
 
-          {/* BACK BUTTON (no scroll) */}
           {activeCat && (
             <button
               onClick={() => setActiveCat(null)}
@@ -65,9 +59,7 @@ export default function MobileNav({ categories }: MobileNavProps) {
             </button>
           )}
 
-          {/* SCROLLABLE AREA */}
           <div className="flex-1 overflow-y-auto">
-            {/* MAIN CATEGORY LIST */}
             {!activeCat && (
               <ul className="flex flex-col divide-y divide-[#82a7a1]">
                 <li className="py-5 px-3 bg-gray-200">
@@ -87,14 +79,12 @@ export default function MobileNav({ categories }: MobileNavProps) {
               </ul>
             )}
 
-            {/* SUB CATEGORY VIEW */}
             {activeCat && (
               <ul className="flex flex-col divide-y bg-white text-black">
                 <li className="py-5 px-4 bg-gray-200 font-bold text-lg">
                   {activeCat.mainCat}
                 </li>
 
-                {/* ALL MAIN CATEGORY */}
                 <li className="py-5 px-4 hover:underline">
                   <Link
                     href={`/products/${activeCat.mainCatSlug}`}
@@ -106,7 +96,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
                   </Link>
                 </li>
 
-                {/* SUB CATEGORIES */}
                 {activeCat.subCats.map((sub: any) => (
                   <li key={sub.slug} className="py-5 px-4 hover:underline">
                     <Link

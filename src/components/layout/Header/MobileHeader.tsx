@@ -9,7 +9,7 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
   return (
     <div className="text-white">
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <MobileNav categories={categories} />
           <button className="flex items-center justify-center flex-col">
             <FaPhone size={20} />
@@ -24,7 +24,9 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
           />
           <button className="flex flex-wrap items-center justify-center flex-col">
             <FaUser size={20} />
-            <h3 className="text-sm sm:text-base mt-0.5">My Account</h3>
+            <h3 className="text-sm text-wrap sm:text-base mt-0.5">
+              My Account
+            </h3>
           </button>
           <button className="flex flex-wrap items-center justify-center flex-col mr-1.5">
             <FaShoppingBasket size={20} />

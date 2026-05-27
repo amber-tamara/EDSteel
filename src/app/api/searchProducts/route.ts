@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     const res = await fetch(
       `${baseUrl}/products?search=${encodeURIComponent(
         query,
-      )}&per_page=10&&status=publish&_fields=id,name,slug,categories`,
+      )}&per_page=10&status=publish&_fields=id,name,slug,categories`,
       {
         headers: {
           Authorization: authHeader,
