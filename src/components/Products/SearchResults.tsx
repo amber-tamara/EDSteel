@@ -1,5 +1,6 @@
 'use client';
 import Filter from '@/components/Products/Filter';
+import ProductCard from '@/components/Products/ProductCard';
 
 export default function SearchResults({
   term,
@@ -11,10 +12,11 @@ export default function SearchResults({
   console.log(results);
   return (
     <div>
-      {/* <Filter /> */}
+      <Filter />
       <h1>Search results for</h1>
       <br />
-      <span className="font-bold text-xl">"{term}"</span>
+      <span className="font-bold text-4xl">"{term}"</span>
+      <ProductCard products={results} />
     </div>
   );
 }

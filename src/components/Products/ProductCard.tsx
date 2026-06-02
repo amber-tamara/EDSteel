@@ -13,9 +13,7 @@ export default function ProductCard({
   subCat: string;
 }) {
   const handleClick = async () => {
-    console.log('hi');
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // TODO: add real "quick add to cart" logic here
   };
 
   return (
@@ -27,12 +25,16 @@ export default function ProductCard({
             className="group relative flex flex-col bg-white border border-transparent hover:border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
           >
             <Link
-              href={`/products/${mainCat}/${subCat}/${product.slug}`}
+              href={
+                subCat
+                  ? `/products/${mainCat}/${subCat}/${product.slug}`
+                  : product.url
+              }
               className="flex sm:flex-col flex-1"
             >
               <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
                 <img
-                  src={product.img}
+                  src={product.img || product.image}
                   alt={product.name}
                   className="w-full h-full object-contain"
                 />

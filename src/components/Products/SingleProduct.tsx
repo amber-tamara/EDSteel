@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Button from '@/components/ui/Button'; // client component
+import Button from '@/components/ui/Button';
 import QuantityInput from '../ui/QuantitySelector';
 import WishlistHeart from '../ui/WishlistHeart';
 import ProductDetails from './ProductDetails';
@@ -19,11 +19,8 @@ export default function ProductView({ productData }: ProductViewProps) {
   const subCat = product.slug;
 
   const handleClick = async () => {
-    console.log('Button clicked!');
-    // simulate a network delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
-  console.log(product);
   return (
     <div className="-mx-4 md:-mx-8 xl:-mx-25">
       <div className="flex justify-center flex-wrap py-10 px-5">

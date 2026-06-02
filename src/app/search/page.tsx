@@ -36,8 +36,9 @@ export default async function SearchPage({
   const data = await res.json();
 
   const results = data.map((product: any) => {
-    const mainCat = product.categories?.[0]?.slug || 'departments';
-    const subCat = product.categories?.[1]?.slug || 'uncategorized';
+    const mainCat = 'departments';
+    const subCat = product.categories?.[0]?.slug || 'uncategorized';
+    console.log(product);
 
     return {
       id: product.id,

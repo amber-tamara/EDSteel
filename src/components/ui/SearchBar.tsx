@@ -112,7 +112,6 @@ export default function SearchBar() {
           <FaSearch size={20} className="text-gray-600" />
         </button>
       </form>
-      {/* DROPDOWN */}
       {query.length >= 3 && results.length > 0 && result && (
         <div className="lg:max-w-[37.75rem] w-full absolute top-full left-0 bg-white border border-gray-200 shadow-lg z-50 rounded-2xl">
           {results

@@ -36,23 +36,18 @@ export async function GET(req: Request) {
     }
 
     const data = await res.json();
-    // console.log(data);
 
     const enriched = data.map((product: any) => {
       const subCat = product.categories?.[0]?.slug || 'uncategorized';
       const mainCat = 'departments';
-      // console.log(subCat);
       return {
         name: product.name,
         id: product.id,
         url: `/products/${mainCat}/${subCat}/${product.slug}`,
       };
     });
-    console.log(enriched);
     return NextResponse.json(enriched);
   } catch (err) {
-    console.error(err);
-
     return NextResponse.json({ error: 'Search failed' }, { status: 500 });
   }
 }
