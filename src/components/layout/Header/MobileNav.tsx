@@ -5,6 +5,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { andToAmpersand } from '@/helpers/text';
 
+interface MobileNavProps {
+  categories: any[];
+}
+
 export default function MobileNav({ categories }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [activeCat, setActiveCat] = useState<any>(null);
@@ -26,20 +30,20 @@ export default function MobileNav({ categories }: MobileNavProps) {
 
       <div
         onClick={handleToggle}
-        className={`fixed inset-0 bg-black/70 transition-opacity duration-300 cursor-pointer ${
+        className={`fixed inset-0 bg-black/70 transition-opacity duration-300 cursor-pointer z-50 ${
           open ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       />
 
       {open && (
-        <div className="w-[calc(100%-44px)] absolute top-0 left-0 md:w-1/2 max-w-sm h-screen bg-white text-black shadow-md flex flex-col">
+        <div className="w-[calc(100%-44px)] fixed inset-y-0 left-0 md:w-1/2 max-w-sm h-full bg-white text-black shadow-md flex flex-col z-[60]">
+          {' '}
           <button
             onClick={handleToggle}
             className="absolute top-4 -right-10 z-50 text-white cursor-pointer"
           >
             <FaTimes size={24} />
           </button>
-
           <div className="shrink-0 flex items-center border-b border-[#82a7a1] grid grid-cols-2">
             <p className="h-full py-3 pl-4 pr-0 border-r border-gray-200 cursor-pointer hover:underline">
               Sign In
@@ -48,7 +52,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
               Register
             </p>
           </div>
-
           {activeCat && (
             <button
               onClick={() => setActiveCat(null)}
@@ -58,7 +61,6 @@ export default function MobileNav({ categories }: MobileNavProps) {
               Back to main menu
             </button>
           )}
-
           <div className="flex-1 overflow-y-auto">
             {!activeCat && (
               <ul className="flex flex-col divide-y divide-[#82a7a1]">

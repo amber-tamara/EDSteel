@@ -112,7 +112,7 @@ export default function SubCategoryPage() {
           products={attributes}
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
-          isVisible="lg:block hidden"
+          isVisible="lg:block hidden lg:w-1/4 lg:pt-10"
         />
         <div className="flex-1 flex flex-col">
           <ProductCard

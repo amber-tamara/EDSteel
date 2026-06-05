@@ -50,7 +50,7 @@ export default function ProductView({ productData }: ProductViewProps) {
 
             <div className="w-full">
               <Button
-                label="Quick Add"
+                label="Add to Basket"
                 className="w-full flex text-black"
                 onClick={handleClick}
               />

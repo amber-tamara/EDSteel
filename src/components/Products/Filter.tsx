@@ -15,9 +15,11 @@ interface AttributeFilter {
 
 interface FilterProps {
   mainCat: string;
+  subCat?: string;
   products?: AttributeFilter[];
   selectedFilters: Record<string, FilterOption[]>;
   setSelectedFilters: (filters: Record<string, FilterOption[]>) => void;
+  isVisible?: string;
 }
 
 export default function Filter({
@@ -31,7 +33,7 @@ export default function Filter({
   const [expandedAttrs, setExpandedAttrs] = useState<Record<string, boolean>>(
     {},
   );
-  const [showAll, setShowAll] = useState<Record<string, boolean>>({}); // per attribute
+  const [showAll, setShowAll] = useState<Record<string, boolean>>({});
 
   const toggleExpand = (attrName: string) => {
     setExpandedAttrs((prev) => ({
@@ -44,54 +46,24 @@ export default function Filter({
     const normalizedAttr = attrName.trim();
     const normalizedOption = option.option.trim();
 
-    console.group(
-      `Toggling option: ${normalizedOption} in group: ${normalizedAttr}`,
-    );
-
     setSelectedFilters((prev) => {
-      console.log('Previous selectedFilters:', JSON.stringify(prev, null, 2));
-
       const current = prev[normalizedAttr] || [];
       const exists = current.some((o) => o.option.trim() === normalizedOption);
-      console.log(
-        'Current options in this group:',
-        current.map((o) => o.option),
-      );
-      console.log('Exists already?', exists);
 
       let updated: FilterOption[];
       if (exists) {
         updated = current.filter((o) => o.option.trim() !== normalizedOption);
-        console.log(
-          'Updated options after removal:',
-          updated.map((o) => o.option),
-        );
       } else {
         updated = [...current, { ...option, option: normalizedOption }];
-        console.log(
-          'Updated options after addition:',
-          updated.map((o) => o.option),
-        );
       }
 
       if (updated.length === 0) {
         const { [normalizedAttr]: _, ...rest } = prev;
-        console.log(
-          'Group empty, removing group key. Rest of state:',
-          JSON.stringify(rest, null, 2),
-        );
         return rest;
       }
 
-      const newState = { ...prev, [normalizedAttr]: updated };
-      console.log(
-        'New selectedFilters state:',
-        JSON.stringify(newState, null, 2),
-      );
-      return newState;
+      return { ...prev, [normalizedAttr]: updated };
     });
-
-    console.groupEnd();
   };
 
   const clearAll = () => {
@@ -99,12 +71,11 @@ export default function Filter({
   };
 
   return (
-    <div className={`mb-4 lg:pt-10 lg:w-1/4 ${isVisible}`}>
+    <div className={`mb-4 ${isVisible}`}>
       <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
         Filters
       </h1>
 
-      {/* Applied filters grouped by attribute */}
       {Object.keys(selectedFilters).length > 0 && (
         <div className="mt-4 border-b border-gray-400 pb-5">
           <div className="flex justify-between items-center mb-4">
@@ -162,8 +133,8 @@ export default function Filter({
             const isExpanded = expandedAttrs[filterData.name] ?? false;
             const isShowAll = showAll[filterData.name] ?? false;
 
-            const firstFive = filterData.options.slice(0, 5);
-            const remaining = filterData.options.slice(5);
+            const firstFive = (filterData?.options || []).slice(0, 5);
+            const remaining = (filterData?.options || []).slice(5);
 
             return (
               <div
@@ -172,19 +143,18 @@ export default function Filter({
               >
                 <button
                   type="button"
-                  className="w-full text-left font-semibold flex justify-between items-center py-1"
+                  className="w-full text-left font-semibold flex justify-between items-center py-1 cursor-pointer"
                   onClick={() => toggleExpand(filterData.name)}
                 >
                   {filterData.name}
                   <span
-                    className={`inline-block w-2 h-2 border-t-1 border-r-1 border-black transition-transform duration-200 ${
-                      isExpanded ? 'rotate-135' : '-rotate-45'
+                    className={`inline-block w-2 h-2 border-t border-r border-black transition-transform duration-200 ${
+                      isExpanded ? 'rotate-135 mt-1' : '-rotate-45'
                     }`}
                   />
                 </button>
                 {isExpanded && (
-                  <ul className="mt-3 space-y-2 pl-1">
-                    {/* First 5 options */}
+                  <ul className="mt-2 space-y-0.5">
                     {firstFive.map((option) => {
                       const isSelected =
                         selectedFilters[filterData.name]?.some(
@@ -194,32 +164,32 @@ export default function Filter({
                       const count = option.productIds.length;
 
                       return (
-                        <li key={option.option} className="flex items-center">
-                          <input
-                            id={`${filterData.name}-${option.option}`}
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() =>
-                              toggleOption(filterData.name, option)
-                            }
-                            className="w-6 h-6 border-gray-300 accent-[#117445]"
-                          />
-                          <label
-                            htmlFor={`${filterData.name}-${option.option}`}
-                            className={`ml-2 cursor-pointer text-sm ${
-                              isSelected ? 'font-medium' : 'text-gray-700'
-                            } transition-colors flex-1`}
-                          >
-                            {option.option}
-                            <span className="text-xs text-gray-500 ml-1.5">
-                              ({count})
-                            </span>
-                          </label>
+                        <li key={option.option}>
+                          <div className="w-full flex items-center group hover:bg-gray-100 px-3 py-2 -mx-3 rounded transition-colors duration-150 cursor-default">
+                            <input
+                              id={`${filterData.name}-${option.option}`}
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() =>
+                                toggleOption(filterData.name, option)
+                              }
+                              className="w-6 h-6 border border-gray-300 rounded appearance-none checked:bg-[#117445] checked:border-[#117445] group-hover:border-[#117445] checked:after:content-['✓'] checked:after:text-white checked:after:text-sm checked:after:font-black checked:after:flex checked:after:justify-center checked:after:items-center cursor-pointer shrink-0 transition-colors"
+                            />
+                            <div className="ml-2 text-sm flex-1 flex items-center">
+                              <span
+                                className={`group-hover:underline ${isSelected ? 'font-medium text-black' : 'text-gray-700'}`}
+                              >
+                                {option.option}
+                              </span>
+                              <span className="text-xs text-gray-500 font-normal no-underline ml-1">
+                                ({count})
+                              </span>
+                            </div>
+                          </div>
                         </li>
                       );
                     })}
 
-                    {/* Remaining options if showAll */}
                     {isShowAll &&
                       remaining.map((option) => {
                         const isSelected =
@@ -230,34 +200,34 @@ export default function Filter({
                         const count = option.productIds.length;
 
                         return (
-                          <li key={option.option} className="flex items-center">
-                            <input
-                              id={`${filterData.name}-${option.option}`}
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={() =>
-                                toggleOption(filterData.name, option)
-                              }
-                              className="w-6 h-6 border-gray-300 accent-[#117445]"
-                            />
-                            <label
-                              htmlFor={`${filterData.name}-${option.option}`}
-                              className={`ml-2 cursor-pointer text-sm ${
-                                isSelected ? 'font-medium' : 'text-gray-700'
-                              } transition-colors flex-1`}
-                            >
-                              {option.option}
-                              <span className="text-xs text-gray-500 ml-1.5">
-                                ({count})
-                              </span>
-                            </label>
+                          <li key={option.option}>
+                            <div className="w-full flex items-center group hover:bg-gray-100 px-3 py-2 -mx-3 rounded transition-colors duration-150 cursor-default">
+                              <input
+                                id={`${filterData.name}-${option.option}`}
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() =>
+                                  toggleOption(filterData.name, option)
+                                }
+                                className="w-6 h-6 border border-gray-300 rounded appearance-none checked:bg-[#117445] checked:border-[#117445] group-hover:border-[#117445] checked:after:content-['✓'] checked:after:text-white checked:after:text-sm checked:after:font-black checked:after:flex checked:after:justify-center checked:after:items-center cursor-pointer shrink-0 transition-colors"
+                              />
+                              <div className="ml-2 text-sm flex-1 flex items-center">
+                                <span
+                                  className={`group-hover:underline ${isSelected ? 'font-medium text-black' : 'text-gray-700'}`}
+                                >
+                                  {option.option}
+                                </span>
+                                <span className="text-xs text-gray-500 font-normal no-underline ml-1">
+                                  ({count})
+                                </span>
+                              </div>
+                            </div>
                           </li>
                         );
                       })}
 
-                    {/* Show more / Show less button */}
                     {remaining.length > 0 && (
-                      <li>
+                      <li className="pt-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -266,7 +236,7 @@ export default function Filter({
                               [filterData.name]: !prev[filterData.name],
                             }))
                           }
-                          className="text-sm cursor-pointer underline hover:no-underline transition-all"
+                          className="text-sm font-semibold text-gray-900 cursor-pointer underline hover:no-underline transition-all"
                         >
                           {isShowAll
                             ? `Show less ${filterData.name}`

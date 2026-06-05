@@ -20,7 +20,7 @@ export default async function SearchPage({
     'Basic ' + Buffer.from(`${key}:${secret}`).toString('base64');
 
   const res = await fetch(
-    `${baseUrl}/products?search=${encodeURIComponent(term)}&per_page=20&status=publish&_fields=id,name,slug,price,images,categories`,
+    `${baseUrl}/products?search=${encodeURIComponent(term)}&per_page=20&status=publish&_fields=id,name,slug,price,images,categories,attributes`,
     {
       headers: {
         Authorization: authHeader,
@@ -47,6 +47,8 @@ export default async function SearchPage({
       price: product.price,
       image: product.images?.[0]?.src || null,
       url: `/products/${mainCat}/${subCat}/${product.slug}`,
+      attributes: product.attributes,
+      categories: product.categories,
     };
   });
 

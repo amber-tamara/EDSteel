@@ -1,27 +1,32 @@
-"use client";
-import DesktopHeader from "./DesktopHeader";
-import MobileHeader from "./MobileHeader";
+'use client';
+import DesktopHeader from './DesktopHeader';
+import MobileHeader from './MobileHeader';
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
-  const [categories, setCategories] = useState("");
+  const [categories, setCategories] = useState('');
   categories;
   useEffect(() => {
-    fetch("/api/categories")
+    fetch('/api/categories')
       .then((res) => res.json())
       .then((data) => {
-        "Categories:", data;
+        ('Categories:', data);
         setCategories(data);
       })
-      .catch((err) => console.error("Fetch error:", err));
+      .catch((err) => console.error('Fetch error:', err));
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 lg:static">
-      <DesktopHeader categories={categories} />
-      <MobileHeader categories={categories}/>
+    <header className="sticky top-0 z-50 lg:relative">
+      <div className="hidden lg:block">
+        <DesktopHeader categories={categories} />
+      </div>
+
+      <div className="lg:hidden">
+        <MobileHeader categories={categories} />
+      </div>
     </header>
   );
 }

@@ -113,7 +113,7 @@ export default function SearchBar() {
         </button>
       </form>
       {query.length >= 3 && results.length > 0 && result && (
-        <div className="lg:max-w-[37.75rem] w-full absolute top-full left-0 bg-white border border-gray-200 shadow-lg z-50 rounded-2xl">
+        <div className="lg:max-w-[37.75rem] w-full absolute top-full left-0 bg-white border border-gray-200 shadow-lg z-40 rounded-2xl">
           {results
             .filter((item: any) => item?.url)
             .map((item: any) => (
