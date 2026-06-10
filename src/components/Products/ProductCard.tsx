@@ -7,17 +7,19 @@ export default function ProductCard({
   products,
   mainCat,
   subCat,
+  className,
 }: {
   products: any[];
   mainCat: string;
   subCat: string;
+  className: string;
 }) {
   const handleClick = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 ${className}`}>
       {Array.isArray(products) &&
         products.map((product) => (
           <div

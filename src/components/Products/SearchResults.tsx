@@ -25,6 +25,7 @@ export default function SearchResults({
   const [products, setProducts] = useState<any[]>([]);
   const [attributes, setAttributes] = useState<any[]>([]);
   const [categoryList, setCategoryList] = useState<CategoryInfo[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>(
     {},
   );
@@ -47,7 +48,6 @@ export default function SearchResults({
       const productId = Number(product.id);
       if (isNaN(productId)) return;
 
-      // 1. Parse Attributes (Handles variations and strings safely)
       if (product.attributes) {
         const attrSource = Array.isArray(product.attributes)
           ? product.attributes
@@ -78,10 +78,8 @@ export default function SearchResults({
           });
         });
       }
-      console.log(product);
-      // 2. Parse Categories (FIXED: Converts fake array-like objects into iterable arrays)
+
       if (product.categories) {
-        console.log(product.categories);
         const categoriesArray = Array.isArray(product.categories)
           ? product.categories
           : Object.values(product.categories);
@@ -106,7 +104,6 @@ export default function SearchResults({
       }
     });
 
-    // Format attributes for standard filter sidebar
     const formattedAttributes = Object.entries(filterMap).map(
       ([name, optionsObj]) => ({
         name,
@@ -118,7 +115,6 @@ export default function SearchResults({
       }),
     );
 
-    // Format and sort categories by highest product count match descending
     const formattedCategories = Object.values(catMap).sort(
       (a, b) => b.count - a.count,
     );
@@ -129,29 +125,48 @@ export default function SearchResults({
 
   const filteredProducts = useMemo(() => {
     if (!products || !Array.isArray(products)) return [];
-    if (Object.keys(selectedFilters).length === 0) return products;
 
-    const allAllowedIds = new Set<number>();
+    let finalProducts = products;
 
-    Object.entries(selectedFilters).forEach(([_, selectedOptions]) => {
-      if (!selectedOptions || selectedOptions.length === 0) return;
-
-      selectedOptions.forEach((option) => {
-        if (option?.productIds) {
-          option.productIds.forEach((id: any) => {
-            const numId = Number(id);
-            if (!isNaN(numId)) allAllowedIds.add(numId);
-          });
-        }
+    if (selectedCategory) {
+      finalProducts = finalProducts.filter((product) => {
+        if (!product || !product.categories) return false;
+        const categoriesArray = Array.isArray(product.categories)
+          ? product.categories
+          : Object.values(product.categories);
+        return categoriesArray.some(
+          (cat: any) => cat?.slug === selectedCategory,
+        );
       });
-    });
+    }
 
-    return products.filter((p) => allAllowedIds.has(Number(p.id)));
-  }, [products, selectedFilters]);
+    if (Object.keys(selectedFilters).length > 0) {
+      const allAllowedIds = new Set<number>();
+
+      Object.entries(selectedFilters).forEach(([_, selectedOptions]) => {
+        if (!selectedOptions || selectedOptions.length === 0) return;
+
+        selectedOptions.forEach((option) => {
+          if (option?.productIds) {
+            option.productIds.forEach((id: any) => {
+              const numId = Number(id);
+              if (!isNaN(numId)) allAllowedIds.add(numId);
+            });
+          }
+        });
+      });
+
+      finalProducts = finalProducts.filter((p) =>
+        allAllowedIds.has(Number(p.id)),
+      );
+    }
+
+    return finalProducts;
+  }, [products, selectedFilters, selectedCategory]);
 
   useEffect(() => {
     setVisibleCount(48);
-  }, [selectedFilters]);
+  }, [selectedFilters, selectedCategory]);
 
   const visibleProducts = (filteredProducts || [])?.slice(0, visibleCount);
 
@@ -187,9 +202,12 @@ export default function SearchResults({
       </div>
 
       <div className="flex gap-6">
-        {/* Left Side Filter Panel Layout */}
         <div className="lg:block hidden lg:w-1/4 lg:pt-10 shrink-0">
-          <CategoryFilter categories={categoryList} />
+          <CategoryFilter
+            categories={categoryList}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
 
           <Filter
             mainCat="search"
@@ -200,7 +218,6 @@ export default function SearchResults({
           />
         </div>
 
-        {/* Product Cards Grid Layout */}
         <div className="flex-1 flex flex-col">
           <ProductCard products={visibleProducts} />
 
