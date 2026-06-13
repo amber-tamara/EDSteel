@@ -27,7 +27,7 @@ function CategoryFilterContent({
   const remainingCount = categories.length - 5;
 
   return (
-    <div className="mb-6 lg:w-full">
+    <div className="mb-6 mt-6 lg:w-full">
       <h2 className="text-2xl pb-2 border-b border-gray-400 font-bold text-black">
         Categories
       </h2>

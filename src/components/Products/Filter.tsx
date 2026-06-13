@@ -1,6 +1,9 @@
 'use client';
+
 import { useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-shadow-utils';
+import { FaTimes as FaTimesIcon } from 'react-icons/fa';
+import CategoryFilter from './CategoryFilter';
 
 interface FilterOption {
   option: string;
@@ -13,6 +16,12 @@ interface AttributeFilter {
   options: FilterOption[];
 }
 
+interface CategoryInfo {
+  name: string;
+  slug: string;
+  count: number;
+}
+
 interface FilterProps {
   mainCat: string;
   subCat?: string;
@@ -20,6 +29,9 @@ interface FilterProps {
   selectedFilters: Record<string, FilterOption[]>;
   setSelectedFilters: (filters: Record<string, FilterOption[]>) => void;
   isVisible?: string;
+  categories: CategoryInfo[];
+  selectedCategory: string | null;
+  onSelectCategory: (slug: string | null) => void;
 }
 
 export default function Filter({
@@ -29,6 +41,9 @@ export default function Filter({
   selectedFilters,
   setSelectedFilters,
   isVisible,
+  categories = [],
+  selectedCategory,
+  onSelectCategory,
 }: FilterProps) {
   const [expandedAttrs, setExpandedAttrs] = useState<Record<string, boolean>>(
     {},
@@ -68,27 +83,28 @@ export default function Filter({
 
   const clearAll = () => {
     setSelectedFilters({});
+    onSelectCategory(null);
   };
+
+  const activeCategoryData = categories.find(
+    (c) => c.slug === selectedCategory,
+  );
+
+  const attributeFiltersCount = Object.values(selectedFilters).reduce(
+    (acc, arr) => acc + arr.length,
+    0,
+  );
+  const totalAppliedCount = attributeFiltersCount + (selectedCategory ? 1 : 0);
+  const hasAppliedFilters = totalAppliedCount > 0;
 
   return (
     <div className={`mb-4 ${isVisible}`}>
-      <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold">
-        Filters
-      </h1>
-
-      {Object.keys(selectedFilters).length > 0 && (
-        <div className="mt-4 border-b border-gray-400 pb-5">
-          <div className="flex justify-between items-center mb-4">
+      {hasAppliedFilters && (
+        <div className="mt-4 pb-5">
+          <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-400">
             <span className="font-semibold">
               Applied filters{' '}
-              <span className="text-green-500">
-                (
-                {Object.values(selectedFilters).reduce(
-                  (acc, arr) => acc + arr.length,
-                  0,
-                )}
-                )
-              </span>
+              <span className="text-green-500">({totalAppliedCount})</span>
             </span>
             <button
               className="underline hover:no-underline cursor-pointer"
@@ -99,31 +115,58 @@ export default function Filter({
           </div>
 
           <div className="flex flex-col gap-4">
-            {products.map((filterData) => {
-              const applied = selectedFilters[filterData.name] || [];
-              if (applied.length === 0) return null;
-
-              return (
-                <div key={filterData.name} className="flex flex-col gap-4">
-                  <span className="font-semibold">{filterData.name}:</span>
-                  <div className="flex flex-col gap-3">
-                    {applied.map((option) => (
-                      <button
-                        key={`${filterData.name}-${option.option}`}
-                        className="flex items-center gap-2 text-gray-800 border border-gray-600 w-full px-2 py-2 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => toggleOption(filterData.name, option)}
-                      >
-                        <FaTimes />
-                        <span>{option.option}</span>
-                      </button>
-                    ))}
-                  </div>
+            {activeCategoryData && (
+              <div className="flex flex-col gap-4">
+                <span className="font-semibold">Category:</span>
+                <div className="flex flex-col gap-3">
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 text-gray-800 border border-gray-600 w-full px-2 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => onSelectCategory(null)}
+                  >
+                    <FaTimesIcon />
+                    <span>{activeCategoryData.name}</span>
+                  </button>
                 </div>
-              );
-            })}
+              </div>
+            )}
+
+            {Object.entries(selectedFilters).map(
+              ([attrName, appliedOptions]) => {
+                if (!appliedOptions || appliedOptions.length === 0) return null;
+
+                return (
+                  <div key={attrName} className="flex flex-col gap-4">
+                    <span className="font-semibold">{attrName}:</span>
+                    <div className="flex flex-col gap-3">
+                      {appliedOptions.map((option) => (
+                        <button
+                          key={`${attrName}-${option.option}`}
+                          className="flex items-center gap-2 text-gray-800 border border-gray-600 w-full px-2 py-2 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => toggleOption(attrName, option)}
+                        >
+                          <FaTimesIcon />
+                          <span>{option.option}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              },
+            )}
           </div>
         </div>
       )}
+
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={onSelectCategory}
+      />
+
+      <h1 className="text-2xl pb-2 border-b border-gray-400 font-bold mt-6">
+        Filters
+      </h1>
 
       {products.length === 0 ? (
         <p className="mt-4 text-gray-500">No filters available</p>

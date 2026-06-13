@@ -18,6 +18,8 @@ export default function ProductCard({
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
+  console.log(products);
+
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 ${className}`}>
       {Array.isArray(products) &&

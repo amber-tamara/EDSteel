@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Filter from '@/components/Products/Filter';
 import ProductCard from '@/components/Products/ProductCard';
 import FilterButton from '@/components/Products/FilterButton';
 import FilterNav from '@/components/Products/FilterNav';
-import CategoryFilter from '@/components/Products/CategoryFilter';
 import Button from '../ui/Button';
 import BackToTopBtn from '../ui/BackToTopBtn';
 
@@ -22,133 +22,172 @@ export default function SearchResults({
   term: string;
   results: any[];
 }) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [attributes, setAttributes] = useState<any[]>([]);
-  const [categoryList, setCategoryList] = useState<CategoryInfo[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>(
-    {},
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isInitialMount = useRef(true);
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    () => {
+      return searchParams.get('category') || null;
+    },
   );
+
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>(
+    () => {
+      const initialFilters: Record<string, any[]> = {};
+      searchParams.forEach((value, key) => {
+        if (key === 'term' || key === 'category') return;
+        initialFilters[key] = value.split(',').map((opt) => ({ option: opt }));
+      });
+      return initialFilters;
+    },
+  );
+
   const [visibleCount, setVisibleCount] = useState(48);
   const [filterOpen, setFilterOpen] = useState(false);
 
   useEffect(() => {
-    if (!results || !Array.isArray(results)) return;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
 
-    setProducts(results);
+    const params = new URLSearchParams();
+    params.set('term', term);
 
-    const filterMap: Record<string, Record<string, Set<number>>> = {};
+    if (selectedCategory) {
+      params.set('category', selectedCategory);
+    }
+
+    Object.entries(selectedFilters).forEach(([attrName, optionsArray]) => {
+      if (optionsArray && optionsArray.length > 0) {
+        const optionValues = optionsArray.map((opt) => opt.option).join(',');
+        params.set(attrName, optionValues);
+      }
+    });
+
+    const queryString = params.toString();
+    const currentPath = window.location.pathname;
+
+    // Smoothly updates URL without triggering a full server component data refetch
+    router.replace(
+      queryString ? `${currentPath}?${queryString}` : currentPath,
+      { scroll: false },
+    );
+  }, [selectedCategory, selectedFilters, term, router]);
+
+  // --- Your existing processing logic remains unchanged ---
+  const categoryList = useMemo(() => {
+    if (!results || !Array.isArray(results)) return [];
     const catMap: Record<
       string,
       { name: string; slug: string; count: number }
     > = {};
 
     results.forEach((product) => {
-      if (!product) return;
+      if (!product || !product.categories) return;
+      const categoriesArray = Array.isArray(product.categories)
+        ? product.categories
+        : Object.values(product.categories);
+
+      categoriesArray.forEach((cat: any) => {
+        if (!cat) return;
+        const catSlug = cat.slug?.trim();
+        const catName = cat.name?.trim();
+        if (!catSlug || !catName) return;
+
+        if (!catMap[catSlug]) {
+          catMap[catSlug] = { name: catName, slug: catSlug, count: 0 };
+        }
+        catMap[catSlug].count += 1;
+      });
+    });
+
+    return Object.values(catMap).sort((a, b) => b.count - a.count);
+  }, [results]);
+
+  const categoryFilteredProducts = useMemo(() => {
+    if (!results || !Array.isArray(results)) return [];
+    if (!selectedCategory) return results;
+
+    return results.filter((product) => {
+      if (!product || !product.categories) return false;
+      const categoriesArray = Array.isArray(product.categories)
+        ? product.categories
+        : Object.values(product.categories);
+      return categoriesArray.some((cat: any) => cat?.slug === selectedCategory);
+    });
+  }, [results, selectedCategory]);
+
+  const dynamicAttributes = useMemo(() => {
+    const filterMap: Record<string, Record<string, Set<number>>> = {};
+
+    categoryFilteredProducts.forEach((product) => {
+      if (!product || !product.attributes) return;
       const productId = Number(product.id);
       if (isNaN(productId)) return;
 
-      if (product.attributes) {
-        const attrSource = Array.isArray(product.attributes)
-          ? product.attributes
-          : Object.values(product.attributes);
+      const attrSource = Array.isArray(product.attributes)
+        ? product.attributes
+        : Object.values(product.attributes);
 
-        attrSource.forEach((attr: any) => {
-          const attrName = attr?.name?.trim();
-          if (!attrName || !attr.options) return;
+      attrSource.forEach((attr: any) => {
+        const attrName = attr?.name?.trim();
+        if (!attrName || !attr.options) return;
 
-          const optionsArray = Array.isArray(attr.options)
-            ? attr.options
-            : Object.values(attr.options);
+        const optionsArray = Array.isArray(attr.options)
+          ? attr.options
+          : Object.values(attr.options);
 
-          optionsArray.forEach((optionRaw: any) => {
-            const optionValue =
-              typeof optionRaw === 'object'
-                ? optionRaw?.option?.trim() || optionRaw?.value?.trim()
-                : String(optionRaw).trim();
+        optionsArray.forEach((optionRaw: any) => {
+          const optionValue =
+            typeof optionRaw === 'object'
+              ? optionRaw?.option?.trim() || optionRaw?.value?.trim()
+              : String(optionRaw).trim();
 
-            if (!optionValue) return;
+          if (!optionValue) return;
 
-            if (!filterMap[attrName]) filterMap[attrName] = {};
-            if (!filterMap[attrName][optionValue]) {
-              filterMap[attrName][optionValue] = new Set<number>();
-            }
-
-            filterMap[attrName][optionValue].add(productId);
-          });
-        });
-      }
-
-      if (product.categories) {
-        const categoriesArray = Array.isArray(product.categories)
-          ? product.categories
-          : Object.values(product.categories);
-
-        categoriesArray.forEach((cat: any) => {
-          if (!cat) return;
-
-          const catSlug = cat.slug?.trim();
-          const catName = cat.name?.trim();
-
-          if (!catSlug || !catName) return;
-
-          if (!catMap[catSlug]) {
-            catMap[catSlug] = {
-              name: catName,
-              slug: catSlug,
-              count: 0,
-            };
+          if (!filterMap[attrName]) filterMap[attrName] = {};
+          if (!filterMap[attrName][optionValue]) {
+            filterMap[attrName][optionValue] = new Set<number>();
           }
-          catMap[catSlug].count += 1;
+
+          filterMap[attrName][optionValue].add(productId);
         });
-      }
+      });
     });
 
-    const formattedAttributes = Object.entries(filterMap).map(
-      ([name, optionsObj]) => ({
-        name,
-        slug: name.toLowerCase().replace(/\s+/g, '-'),
-        options: Object.entries(optionsObj).map(([option, idSet]) => ({
-          option,
-          productIds: Array.from(idSet),
-        })),
-      }),
-    );
-
-    const formattedCategories = Object.values(catMap).sort(
-      (a, b) => b.count - a.count,
-    );
-
-    setAttributes(formattedAttributes);
-    setCategoryList(formattedCategories);
-  }, [results]);
+    return Object.entries(filterMap).map(([name, optionsObj]) => ({
+      name,
+      slug: name.toLowerCase().replace(/\s+/g, '-'),
+      options: Object.entries(optionsObj).map(([option, idSet]) => ({
+        option,
+        productIds: Array.from(idSet),
+      })),
+    }));
+  }, [categoryFilteredProducts]);
 
   const filteredProducts = useMemo(() => {
-    if (!products || !Array.isArray(products)) return [];
-
-    let finalProducts = products;
-
-    if (selectedCategory) {
-      finalProducts = finalProducts.filter((product) => {
-        if (!product || !product.categories) return false;
-        const categoriesArray = Array.isArray(product.categories)
-          ? product.categories
-          : Object.values(product.categories);
-        return categoriesArray.some(
-          (cat: any) => cat?.slug === selectedCategory,
-        );
-      });
-    }
+    let finalProducts = categoryFilteredProducts;
 
     if (Object.keys(selectedFilters).length > 0) {
       const allAllowedIds = new Set<number>();
+      let trackingValidFilters = false;
 
-      Object.entries(selectedFilters).forEach(([_, selectedOptions]) => {
+      Object.entries(selectedFilters).forEach(([attrName, selectedOptions]) => {
         if (!selectedOptions || selectedOptions.length === 0) return;
 
-        selectedOptions.forEach((option) => {
-          if (option?.productIds) {
-            option.productIds.forEach((id: any) => {
+        const liveAttr = dynamicAttributes.find((a) => a.name === attrName);
+        if (!liveAttr) return;
+
+        selectedOptions.forEach((selOption) => {
+          const liveOpt = liveAttr.options.find(
+            (o) => o.option.trim() === selOption.option.trim(),
+          );
+
+          if (liveOpt?.productIds) {
+            trackingValidFilters = true;
+            liveOpt.productIds.forEach((id: any) => {
               const numId = Number(id);
               if (!isNaN(numId)) allAllowedIds.add(numId);
             });
@@ -156,17 +195,60 @@ export default function SearchResults({
         });
       });
 
-      finalProducts = finalProducts.filter((p) =>
-        allAllowedIds.has(Number(p.id)),
-      );
+      if (trackingValidFilters) {
+        finalProducts = finalProducts.filter((p) =>
+          allAllowedIds.has(Number(p.id)),
+        );
+      }
     }
 
     return finalProducts;
-  }, [products, selectedFilters, selectedCategory]);
+  }, [categoryFilteredProducts, selectedFilters, dynamicAttributes]);
+
+  useEffect(() => {
+    // If the category selection changes, prune invalid dynamic filters
+    setSelectedFilters((prev) => {
+      const updated = { ...prev };
+      let changed = false;
+
+      Object.keys(updated).forEach((attrName) => {
+        const liveAttribute = dynamicAttributes.find(
+          (attr) => attr.name === attrName,
+        );
+
+        if (!liveAttribute) {
+          delete updated[attrName];
+          changed = true;
+        } else {
+          const currentSelectedOptions = updated[attrName] || [];
+
+          const validSelectedOptions = currentSelectedOptions.filter(
+            (selectedOption) =>
+              liveAttribute.options.some(
+                (liveOpt) =>
+                  liveOpt.option.trim() === selectedOption.option.trim(),
+              ),
+          );
+
+          if (validSelectedOptions.length !== currentSelectedOptions.length) {
+            if (validSelectedOptions.length === 0) {
+              delete updated[attrName];
+            } else {
+              updated[attrName] = validSelectedOptions;
+            }
+            changed = true;
+          }
+        }
+      });
+
+      return changed ? updated : prev;
+    });
+    setVisibleCount(48);
+  }, [selectedCategory, dynamicAttributes]);
 
   useEffect(() => {
     setVisibleCount(48);
-  }, [selectedFilters, selectedCategory]);
+  }, [selectedFilters]);
 
   const visibleProducts = (filteredProducts || [])?.slice(0, visibleCount);
 
@@ -189,32 +271,33 @@ export default function SearchResults({
 
         <FilterButton
           selectedFilters={selectedFilters}
+          selectedCategory={selectedCategory}
           onOpen={() => setFilterOpen(true)}
         />
 
         <FilterNav
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
-          products={attributes}
+          products={dynamicAttributes}
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
+          categories={categoryList}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
         />
       </div>
 
       <div className="flex gap-6">
         <div className="lg:block hidden lg:w-1/4 lg:pt-10 shrink-0">
-          <CategoryFilter
-            categories={categoryList}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
-
           <Filter
             mainCat="search"
-            products={attributes}
+            products={dynamicAttributes}
             selectedFilters={selectedFilters}
             setSelectedFilters={setSelectedFilters}
             isVisible="w-full"
+            categories={categoryList}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
           />
         </div>
 

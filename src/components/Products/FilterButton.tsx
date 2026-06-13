@@ -3,12 +3,17 @@ import { FaFilter } from 'react-icons/fa';
 
 export default function FilterButton({
   selectedFilters,
+  selectedCategory,
   onOpen,
 }: FilterButtonProps) {
-  const count = Object.values(selectedFilters).reduce(
+  const attributeCount = Object.values(selectedFilters).reduce(
     (acc, arr) => acc + arr.length,
     0,
   );
+
+  console.log(selectedCategory);
+
+  const totalCount = attributeCount + (selectedCategory ? 1 : 0);
 
   return (
     <button
@@ -17,7 +22,10 @@ export default function FilterButton({
     >
       <FaFilter size={20} />
       <span className="font-semibold">
-        Filter {count > 0 && <span className="text-green-500">({count})</span>}
+        Filter{' '}
+        {totalCount > 0 && (
+          <span className="text-green-500">({totalCount})</span>
+        )}
       </span>
     </button>
   );
@@ -28,13 +36,8 @@ interface FilterOption {
   productIds: number[];
 }
 
-interface AttributeFilter {
-  name: string;
-  slug: string;
-  options: FilterOption[];
-}
-
 interface FilterButtonProps {
   selectedFilters: Record<string, FilterOption[]>;
+  selectedCategory: string | null;
   onOpen: () => void;
 }
