@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/Products/ProductCard';
 import Button from '@/components/ui/Button';
+import { FaPrint } from 'react-icons/fa';
 
 export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState<any[]>([]);
@@ -76,11 +77,9 @@ export default function WishlistPage() {
   }, [wishlistProducts]);
 
   const handleDeleteWishlist = () => {
-    if (confirm('Are you sure you want to delete your entire wish list?')) {
-      localStorage.setItem('wishlist', JSON.stringify([]));
-      localStorage.removeItem('wishlist_created_at');
-      setWishlistProducts([]);
-    }
+    localStorage.setItem('wishlist', JSON.stringify([]));
+    localStorage.removeItem('wishlist_created_at');
+    setWishlistProducts([]);
   };
 
   const handleAddAllToBasket = () => {
@@ -96,8 +95,8 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="border-b border-gray-200 pb-6 mb-8">
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="">
         <h1 className="text-3xl font-bold text-gray-900">My wish list</h1>
       </div>
 
@@ -109,11 +108,11 @@ export default function WishlistPage() {
         </div>
       ) : (
         <div>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 mt-2">
             List created {creationDate}
           </p>
 
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+          <div className="py-2 text-sm">
             This wish list is available for 30 days.{' '}
             <Link
               href="/signin"
@@ -131,55 +130,45 @@ export default function WishlistPage() {
             to save items to your account and access them from everywhere.
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 items-start mt-6">
-            <div className="flex-1 w-full">
+          <div className="flex flex-col lg:flex-row gap-8 items-start my-6">
+            <div className="w-full">
               <ProductCard
                 products={wishlistProducts}
                 mainCat="wishlist"
                 subCat="saved-items"
               />
             </div>
-
-            <div className="w-full lg:w-80 bg-gray-50 rounded-lg border border-gray-200 p-6 shrink-0 sticky top-6">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-                Wish list total
+          </div>
+          <div className="flex justify-between w-full border-t border-gray-200 pt-6 shrink-0">
+            <div className="flex flex-col items-start justify-between text-sm font-medium align-center w-full">
+              <h2 className="text-xl font-bold text-gray-900 mr-2">
+                Wish list total:
               </h2>
-
-              <div className="flex justify-between items-baseline mb-6">
-                <span className="text-gray-600 text-sm">
-                  Total ({wishlistProducts.length}{' '}
-                  {wishlistProducts.length === 1 ? 'item' : 'items'}):
-                </span>
-                <span className="text-3xl font-black text-gray-900">
-                  £{wishlistTotal.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <Button
-                  label="Add all to basket"
-                  onClick={handleAddAllToBasket}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3"
-                />
-
-                <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 text-sm font-medium">
-                  <button
-                    onClick={() => window.print()}
-                    className="text-gray-600 hover:text-gray-900 hover:underline transition-all"
-                  >
-                    Print
-                  </button>
-
-                  <button
-                    onClick={handleDeleteWishlist}
-                    className="text-red-600 hover:text-red-800 hover:underline transition-all"
-                  >
-                    Delete Wish List
-                  </button>
-                </div>
-              </div>
+            </div>
+            <div className="flex items-start">
+              <span className="text-3xl font-black text-gray-900">£8.00</span>
             </div>
           </div>
+          <div className="flex justify-between w-full sticky bottom-0 bg-white py-3">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center cursor-pointer border border-black border-2 py-3 px-10 hover:border-red-600 transition-all"
+            >
+              <FaPrint size={14} className="mr-2" />
+              Print
+            </button>
+            <Button
+              label="Add all to basket"
+              onClick={handleAddAllToBasket}
+              className="flex w-1/6"
+            />
+          </div>
+          <button
+            onClick={handleDeleteWishlist}
+            className="hover:text-red-600 underline transition-all cursor-pointer"
+          >
+            Delete Wish List
+          </button>
         </div>
       )}
     </div>

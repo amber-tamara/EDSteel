@@ -38,13 +38,11 @@ export default function ProductCard({
             >
               <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
                 <img
-                  src={product.img || product.image}
+                  src={product.img || product.image || product.images[0].src}
                   alt={product.name}
                   className="w-full h-full object-contain"
                 />
               </div>
-
-              {/* Content */}
               <div className="mx-4 sm:m-4 flex flex-col flex-1 justify-center">
                 <h2 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
                   {product.name}
