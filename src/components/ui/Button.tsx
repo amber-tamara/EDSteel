@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
 export default function Button({
   label,
@@ -8,7 +8,7 @@ export default function Button({
   className,
 }: {
   label: string;
-  onClick?: () => Promise<void>;
+  onClick?: () => void | Promise<void>;
   className: string;
 }) {
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function Button({
     >
       <div
         className={`absolute flex space-x-1.5 transition-opacity duration-200 ease-in-out
-            ${loading ? "opacity-100" : "opacity-0"}`}
+            ${loading ? 'opacity-100' : 'opacity-0'}`}
       >
         <span className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:0s]" />
         <span className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:0.15s]" />
@@ -41,7 +41,7 @@ export default function Button({
       </div>
       <span
         className={`absolute transition-opacity duration-200 ease-in-out
-            ${loading ? "opacity-0" : "opacity-100"}`}
+            ${loading ? 'opacity-0' : 'opacity-100'}`}
       >
         {label}
       </span>

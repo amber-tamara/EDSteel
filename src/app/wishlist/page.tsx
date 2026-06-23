@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import ProductCard from '@/components/Products/ProductCard';
+import ProductRowList from '@/components/Products/ProductRowList';
 import Button from '@/components/ui/Button';
 import { FaPrint } from 'react-icons/fa';
 
@@ -82,8 +82,8 @@ export default function WishlistPage() {
     setWishlistProducts([]);
   };
 
-  const handleAddAllToBasket = () => {
-    console.log('Adding all items to basket:', wishlistProducts);
+  const handleAddAllToBasket = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
   if (!isLoaded) {
@@ -132,7 +132,7 @@ export default function WishlistPage() {
 
           <div className="flex flex-col lg:flex-row gap-8 items-start my-6">
             <div className="w-full">
-              <ProductCard
+              <ProductRowList
                 products={wishlistProducts}
                 mainCat="wishlist"
                 subCat="saved-items"
