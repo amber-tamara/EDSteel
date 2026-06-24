@@ -7,6 +7,7 @@ import WishlistHeart from '../ui/WishlistHeart';
 import ProductDetails from './ProductDetails';
 import ProductInformation from './ProductInformation';
 import ProductCard from './ProductCard';
+import BackToTopBtn from '../ui/BackToTopBtn';
 
 interface ProductViewProps {
   productData;
@@ -25,7 +26,7 @@ export default function ProductView({ productData }: ProductViewProps) {
   };
   console.log(variants);
   return (
-    <div className="-mx-4 md:-mx-8 xl:-mx-25">
+    <div className="-mx-5 md:-mx-15">
       <div className="flex flex-col lg:flex-row justify-center py-10 px-5">
         <div className="w-full lg:hidden">
           <h1 className="text-3xl leading-[1.2] text-black font-bold mb-4 text-center">
@@ -87,6 +88,7 @@ export default function ProductView({ productData }: ProductViewProps) {
           />
         </div>
       )}
+      <BackToTopBtn className="mt-0!" />
     </div>
   );
 }

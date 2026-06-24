@@ -19,7 +19,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 lg:relative">
+    <header className="sticky top-0 z-51 lg:relative">
       <div className="hidden lg:block">
         <DesktopHeader categories={categories} />
       </div>
