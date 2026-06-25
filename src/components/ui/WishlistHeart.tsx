@@ -5,8 +5,10 @@ import { FaRegHeart, FaHeart } from 'react-icons/fa';
 
 export default function WishlistHeart({
   productId,
+  onClick,
 }: {
   productId: string | number;
+  onClick: () => void;
 }) {
   const [saved, setSaved] = useState(false);
 
@@ -34,6 +36,7 @@ export default function WishlistHeart({
     }
 
     setSaved(!saved);
+    onClick();
   };
 
   return (

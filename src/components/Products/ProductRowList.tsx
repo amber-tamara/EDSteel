@@ -12,7 +12,7 @@ interface ProductRowListProps {
   subCat: string;
   className?: string;
   onRemove: (id: string | number) => void;
-  onAddToBasket: () => void;
+  onclick: () => void;
 }
 
 export default function ProductRowList({
@@ -21,7 +21,7 @@ export default function ProductRowList({
   subCat,
   className = '',
   onRemove,
-  onAddToBasket,
+  onClick,
 }: ProductRowListProps) {
   const [activeDeleteId, setActiveDeleteId] = useState<string | number | null>(
     null,
@@ -29,7 +29,7 @@ export default function ProductRowList({
 
   const handleIndividualAddToBasket = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    onAddToBasket();
+    onClick();
   };
 
   const handleConfirmRemove = (id: string | number) => {

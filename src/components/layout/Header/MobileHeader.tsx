@@ -10,7 +10,7 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
     <div className="text-white">
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
         {/* Top row with navigation button, logo, and action items */}
-        <div className="flex justify-between gap-2 relative z-30">
+        <div className="flex justify-between gap-2 relative z-51">
           <MobileNav categories={categories} />
 
           <button className="flex items-center justify-center flex-col">

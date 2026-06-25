@@ -6,6 +6,7 @@ import ProductRowList from '@/components/Products/ProductRowList';
 import Button from '@/components/ui/Button';
 import BackToTopBtn from '@/components/ui/BackToTopBtn';
 import BasketNotification from '@/components/ui/BasketNotification';
+import LoadingBar from '@/components/ui/LoadingBar';
 import { FaPrint } from 'react-icons/fa';
 
 export default function WishlistPage() {
@@ -121,24 +122,21 @@ export default function WishlistPage() {
   };
 
   if (!isLoaded) {
-    return (
-      <div className="pt-10 text-center text-gray-500">
-        Loading your wish list...
-      </div>
-    );
+    return <LoadingBar />;
   }
 
   return (
-    <div className="pt-6 relative">
+    <div className="relative">
       {alertTrigger && (
-        <BasketNotification
-          key={alertTrigger.id}
-          addedCount={alertTrigger.count}
-          onClose={() => setAlertTrigger(null)}
-        />
+        <div className="sticky top-0 z-50">
+          <BasketNotification
+            key={alertTrigger.id}
+            addedCount={alertTrigger.count}
+          />
+        </div>
       )}
 
-      <div>
+      <div className="pt-6">
         <h1 className="text-3xl font-bold text-gray-900">My wish list</h1>
       </div>
 
@@ -177,7 +175,7 @@ export default function WishlistPage() {
                 mainCat="wishlist"
                 subCat="saved-items"
                 onRemove={handleRemoveProduct}
-                onAddToBasket={() =>
+                onClick={() =>
                   setAlertTrigger({
                     id: `single-${Date.now()}-${Math.random()}`,
                     count: 1,

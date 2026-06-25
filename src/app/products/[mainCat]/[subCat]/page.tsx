@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { fromSlugToName, andToAmpersand } from '@/helpers/text';
 import Link from 'next/link';
@@ -12,6 +12,8 @@ import BackToTopBtn from '@/components/ui/BackToTopBtn';
 import FilterButton from '@/components/Products/FilterButton';
 import FilterNav from '@/components/Products/FilterNav';
 import LoadingBar from '@/components/ui/LoadingBar';
+import BasketNotification from '@/components/ui/BasketNotification';
+import QuickBasketModal from '@/components/ui/QuickBasketModal';
 
 export default function SubCategoryPage() {
   const { mainCat, subCat } = useParams();
@@ -23,9 +25,22 @@ export default function SubCategoryPage() {
   const [visibleCount, setVisibleCount] = useState(48);
   const [filterOpen, setFilterOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Guard flag to prevent URL overwrite cycles on mount
   const [isReady, setIsReady] = useState(false);
+
+  const [alertTrigger, setAlertTrigger] = useState<{
+    id: string;
+    count: number;
+  } | null>(null);
+
+  const [basketModal, setBasketModal] = useState<{
+    isOpen: boolean;
+    itemName: string;
+    itemImageUrl: string;
+  }>({
+    isOpen: false,
+    itemName: '',
+    itemImageUrl: '',
+  });
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     () => {
@@ -48,7 +63,6 @@ export default function SubCategoryPage() {
     },
   );
 
-  // Fetch product data and sync initial URL states securely
   useEffect(() => {
     if (!subCat) return;
 
@@ -63,7 +77,6 @@ export default function SubCategoryPage() {
         setProducts(fetchedProducts);
         setAttributes(fetchedAttributes);
 
-        // Rehydrate URL states into real attribute structures containing active productIds maps
         setSelectedFilters((prevCurrentFilters) => {
           const updated = { ...prevCurrentFilters };
           Object.keys(updated).forEach((attrName) => {
@@ -87,11 +100,10 @@ export default function SubCategoryPage() {
       .catch(console.error)
       .finally(() => {
         setLoading(false);
-        setIsReady(true); // Safely unlock filter synchronization writes
+        setIsReady(true);
       });
   }, [subCat]);
 
-  // Handle URL updating *only* after component data hydration has unlocked
   useEffect(() => {
     if (!isReady) return;
 
@@ -317,7 +329,7 @@ export default function SubCategoryPage() {
   }, [categoryFilteredProducts, selectedFilters, dynamicAttributes]);
 
   useEffect(() => {
-    if (!isReady) return; // Prevent clearing attributes before hydration completes
+    if (!isReady) return;
 
     setSelectedFilters((prev) => {
       const updated = { ...prev };
@@ -368,7 +380,18 @@ export default function SubCategoryPage() {
     setVisibleCount((prev) => Math.min(prev + 48, filteredProducts.length));
 
   return (
-    <div className="md:overscroll-none">
+    <div className="md:overscroll-none relative">
+      {alertTrigger && (
+        <div className="sticky top-0 z-30">
+          <BasketNotification
+            key={alertTrigger.id}
+            addedCount={alertTrigger.count}
+            onClose={() => setAlertTrigger(null)}
+            varient={true}
+          />
+        </div>
+      )}
+
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
       <div className="flex justify-between">
         <div>
@@ -423,6 +446,19 @@ export default function SubCategoryPage() {
                 products={visibleProducts}
                 subCat={subCat}
                 mainCat={mainCat}
+                onClick={() =>
+                  setAlertTrigger({
+                    id: `single-${Date.now()}-${Math.random()}`,
+                    count: 1,
+                  })
+                }
+                onAddToBasket={(itemName: string, itemImageUrl: string) =>
+                  setBasketModal({
+                    isOpen: true,
+                    itemName,
+                    itemImageUrl,
+                  })
+                }
               />
 
               <div className="flex flex-col items-center mt-10 gap-4">
@@ -444,6 +480,13 @@ export default function SubCategoryPage() {
         </div>
       </div>
       <BackToTopBtn />
+
+      <QuickBasketModal
+        isOpen={basketModal.isOpen}
+        onClose={() => setBasketModal((prev) => ({ ...prev, isOpen: false }))}
+        itemName={basketModal.itemName}
+        itemImageUrl={basketModal.itemImageUrl}
+      />
     </div>
   );
 }

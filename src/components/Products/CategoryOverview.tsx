@@ -25,7 +25,6 @@ export default function CategoryOverview({
           <div className="flex flex-col mb-12">
             <h2 className="text-2xl font-bold pb-5">{item.subCatName}</h2>
 
-            {/* Products container */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-8">
               {item.products.map((product) => (
                 <div className="flex flex-col items-center aspect-square flex-1">

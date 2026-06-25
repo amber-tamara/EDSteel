@@ -8,7 +8,7 @@ import UtilityBar from '@/components/ui/UtilityBar';
 
 export default function DesktopHeader({ categories }: DesktopHeaderProps) {
   return (
-    <header className="hidden lg:flex flex-col pb-3">
+    <header className="hidden lg:flex flex-col">
       <UtilityBar />
       <div className="bg-primary-custom-teal px-15 py-4 flex justify-around h-1/2">
         <div className="flex w-screen items-center">
