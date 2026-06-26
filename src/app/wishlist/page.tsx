@@ -128,7 +128,7 @@ export default function WishlistPage() {
   return (
     <div className="relative">
       {alertTrigger && (
-        <div className="sticky top-0 z-50">
+        <div className="sticky top-31 lg:top-0 left-0 z-50">
           <BasketNotification
             key={alertTrigger.id}
             addedCount={alertTrigger.count}

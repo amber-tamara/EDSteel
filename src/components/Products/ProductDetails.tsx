@@ -14,8 +14,8 @@ export default function ProductDetails({ product }) {
   if (specs.length === 0) return null;
 
   return (
-    <section className="py-10 border-t border-gray-200 w-full md:max-w-[50%] w-full px-5 sm:px-6 lg:px-10">
-      <h3 className="text-xl font-meduim mb-6 text-black">Specifications</h3>
+    <section className="py-6 border-t border-gray-200 w-full md:max-w-[50%] w-full px-5 sm:px-6 lg:px-10">
+      <h3 className="text-xl font-meduim mb-5 text-black">Specifications</h3>
 
       <div className="divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
         {specs.map((spec, i) => (

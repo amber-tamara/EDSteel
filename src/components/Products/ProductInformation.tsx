@@ -17,13 +17,12 @@ export default function ProductInformation({ product }) {
   );
 
   return (
-    <section className="bg-[#f0f0f0] px-5 sm:px-6 lg:px-10 rounded-xl mt-12 w-full md:max-w-[50%]">
-      <h2 className="text-2xl font-bold mb-6 text-black">Product detials</h2>
-      <h3 className="text-xl font-meduim mb-6 text-black">
+    <section className="bg-[#f0f0f0] rounded-xl mt-6 w-full md:max-w-[50%]">
+      <h3 className="text-xl font-meduim mb-5 text-black">
         Product information
       </h3>
 
-      <p className="text-gray-800 leading-relaxed mb-8">{description}</p>
+      <p className="text-gray-800 leading-relaxed mb-10">{description}</p>
 
       {infoMeta?.length > 0 && (
         <>

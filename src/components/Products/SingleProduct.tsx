@@ -1,32 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Button from '@/components/ui/Button';
+import Breadcrumbs from '@/components/ui/Breadcrumb';
 import QuantityInput from '../ui/QuantitySelector';
 import WishlistHeart from '../ui/WishlistHeart';
 import ProductDetails from './ProductDetails';
 import ProductInformation from './ProductInformation';
 import ProductCard from './ProductCard';
 import BackToTopBtn from '../ui/BackToTopBtn';
+import QuickBasketModal from '../ui/QuickBasketModal';
 
 interface ProductViewProps {
-  productData;
+  productData: any;
 }
 
 export default function ProductView({ productData }: ProductViewProps) {
   const [qty, setQty] = useState(1);
   const [product, setProduct] = useState(productData.singleProduct ?? null);
   const [variants, setVariants] = useState(productData.varients ?? []);
+  const [basketModal, setBasketModal] = useState<{
+    isOpen: boolean;
+    itemName: string;
+    itemImageUrl: string;
+  }>({
+    isOpen: false,
+    itemName: '',
+    itemImageUrl: '',
+  });
 
-  const mainCat = product.categories[0].name;
-  const subCat = product.slug;
+  const { mainCat, subCat } = useParams();
+
+  useEffect(() => {
+    if (basketModal.isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [basketModal.isOpen]);
 
   const handleClick = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    setBasketModal({
+      isOpen: true,
+      itemName: product.name,
+      itemImageUrl: product.images?.[0]?.src || '',
+    });
   };
-  console.log(variants);
+
   return (
     <div className="-mx-5 md:-mx-15">
+      <div className="px-5 lg:px-15">
+        <Breadcrumbs
+          mainCat={mainCat}
+          subCat={subCat}
+          productName={product.name.split(/\d/)[0].trim()}
+        />
+      </div>
       <div className="flex flex-col lg:flex-row justify-center py-10 px-5">
         <div className="w-full lg:hidden">
           <h1 className="text-3xl leading-[1.2] text-black font-bold mb-4 text-center">
@@ -69,14 +104,18 @@ export default function ProductView({ productData }: ProductViewProps) {
           </div>
         </div>
       </div>
-
-      <div className="bg-[#eff0f0] flex justify-between flex-wrap">
-        <ProductInformation product={product} />
-        <ProductDetails product={product} />
+      <div className="bg-[#eff0f0] px-5 lg:px-15">
+        <h2 className="text-2xl font-bold text-black pt-10 pb-6 border-b border-gray-300">
+          Product details
+        </h2>
+        <div className="flex justify-between flex-wrap">
+          <ProductInformation product={product} />
+          <ProductDetails product={product} />
+        </div>
       </div>
 
       {variants.length > 0 && (
-        <div className="px-5 sm:px-6 lg:px-10 py-10">
+        <div className="px-5 sm:px-6 lg:px-15 py-10">
           <h2 className="text-2xl font-bold mb-6 text-black">
             Similar products
           </h2>
@@ -85,10 +124,23 @@ export default function ProductView({ productData }: ProductViewProps) {
             mainCat={mainCat}
             subCat={subCat}
             className="lg:grid-cols-4 md:grid-cols-3 gap-1"
+            onAddToBasket={(itemName: string, itemImageUrl: string) =>
+              setBasketModal({
+                isOpen: true,
+                itemName,
+                itemImageUrl,
+              })
+            }
           />
         </div>
       )}
       <BackToTopBtn className="mt-0!" />
+      <QuickBasketModal
+        isOpen={basketModal.isOpen}
+        onClose={() => setBasketModal((prev) => ({ ...prev, isOpen: false }))}
+        itemName={basketModal.itemName}
+        itemImageUrl={basketModal.itemImageUrl}
+      />
     </div>
   );
 }

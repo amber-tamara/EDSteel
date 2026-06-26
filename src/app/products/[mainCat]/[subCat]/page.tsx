@@ -374,6 +374,18 @@ export default function SubCategoryPage() {
     setVisibleCount(48);
   }, [selectedFilters]);
 
+  useEffect(() => {
+    if (basketModal.isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [basketModal.isOpen]);
+
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
   const handleClick = () =>
@@ -382,7 +394,7 @@ export default function SubCategoryPage() {
   return (
     <div className="md:overscroll-none relative">
       {alertTrigger && (
-        <div className="sticky top-0 z-30">
+        <div className="sticky top-31 lg:top-0 z-30">
           <BasketNotification
             key={alertTrigger.id}
             addedCount={alertTrigger.count}

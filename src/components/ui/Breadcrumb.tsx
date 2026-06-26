@@ -7,15 +7,21 @@ import { fromSlugToName, andToAmpersand } from '@/helpers/text';
 interface BreadcrumbsProps {
   mainCat?: string;
   subCat?: string;
+  productName?: string;
 }
 
-export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
+export default function Breadcrumbs({
+  mainCat,
+  subCat,
+  productName,
+}: BreadcrumbsProps) {
   const pathname = usePathname();
 
   const isProductPage = pathname.startsWith('/products');
 
   const linkStyle = 'text-sm cursor-pointer hover:underline';
-  const currentStyle = 'text-sm text-gray-600 cursor-default';
+  const currentStyle =
+    'text-sm text-gray-600 cursor-default max-w-[300px] truncate';
 
   if (!isProductPage) {
     const pageName = pathname.replace('/', '');
@@ -41,11 +47,10 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
   const subPath = `/products/${mainCat}/${subCat}`;
 
   const isMainPage = pathname === mainPath;
-  const isSubPage = pathname === subPath;
+  const isSubPage = pathname === subPath && !productName;
 
   return (
     <ol className="hidden sm:flex items-center text-black space-x-2 pt-3">
-      {/* Home */}
       <li className="flex items-center">
         <Link href="/" className={linkStyle}>
           Home
@@ -53,7 +58,6 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
         <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
       </li>
 
-      {/* Main category */}
       {mainCat && (
         <li className="flex items-center">
           {isMainPage ? (
@@ -72,9 +76,8 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
         </li>
       )}
 
-      {/* Sub category */}
       {subCat && (
-        <li>
+        <li className="flex items-center">
           {isSubPage ? (
             <span className={currentStyle}>
               {fromSlugToName(andToAmpersand(subCat))}
@@ -84,6 +87,16 @@ export default function Breadcrumbs({ mainCat, subCat }: BreadcrumbsProps) {
               {fromSlugToName(andToAmpersand(subCat))}
             </Link>
           )}
+
+          {productName && (
+            <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
+          )}
+        </li>
+      )}
+
+      {productName && (
+        <li className={currentStyle} title={productName}>
+          {productName}
         </li>
       )}
     </ol>
