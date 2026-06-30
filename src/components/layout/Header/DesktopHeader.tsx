@@ -11,14 +11,16 @@ export default function DesktopHeader({ categories }: DesktopHeaderProps) {
     <header className="hidden lg:flex flex-col">
       <UtilityBar />
       <div className="bg-primary-custom-teal px-15 py-4 flex justify-around h-1/2">
-        <div className="flex w-screen items-center">
-          <Image
-            src="/banana.png"
-            alt="Company Logo"
-            width={160}
-            height={10}
-            className="lex-initial mr-3"
-          />
+        <div className="flex w-screen items-center justify-center">
+          <Link href={'/'} className="flex items-center mr-3">
+            <Image
+              src="/ED_logo_lg.png"
+              alt="Company Logo"
+              width={160}
+              height={11}
+              className="lex-initial"
+            />
+          </Link>
           <SearchBar />
         </div>
         <div className="flex text-white">

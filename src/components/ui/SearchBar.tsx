@@ -86,7 +86,7 @@ export default function SearchBar() {
     <div ref={searchRef} className="relative w-full">
       <form
         onSubmit={handleSearch}
-        className="rounded-2xl mt-2 flex h-full flex-grow bg-white shadow-md overflow-hidden border border-gray-300 focus-within:border-green-500 lg:max-w-[37.75rem] lg:mr-5"
+        className="rounded-2xl flex h-full flex-grow bg-white shadow-md overflow-hidden border border-gray-300 focus-within:border-green-500 lg:max-w-[37.75rem] lg:mr-5"
       >
         <input
           type="text"

@@ -16,8 +16,8 @@ export default function ProductCard({
   mainCat: string;
   subCat: string;
   className?: string;
-  onClick: () => void; // Strictly for Wishlist
-  onAddToBasket: (name: string, img: string) => void; // Strictly for Basket
+  onClick: () => void;
+  onAddToBasket: (name: string, img: string) => void;
 }) {
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 ${className || ''}`}>
