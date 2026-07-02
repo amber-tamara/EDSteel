@@ -16,13 +16,12 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
             <FaPhone size={20} />
             <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
           </button>
-          <Link href="/">
+          <Link href="/" className="shrink-0">
             <Image
               src="/ED_logo_sm.svg"
               alt="Company Logo"
               width={60}
               height={10}
-              className="flex-initial"
             />
           </Link>
           <button className="flex flex-wrap items-center justify-center flex-col">

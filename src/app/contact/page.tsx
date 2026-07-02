@@ -35,11 +35,11 @@ export default function ContactPage() {
 
   return (
     <div>
-      <div className="px-4">
+      <div className="">
         <Breadcrumbs />
         <h1 className="font-semibold text-4xl pt-4">Contact Us</h1>
       </div>
-      <div className="mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
+      <div className="mx-auto py-10 grid md:grid-cols-2 gap-10">
         <div className="space-y-6 bg-white border rounded-2xl p-6">
           <div>
             <h2 className="font-semibold text-xl border-b pb-4">

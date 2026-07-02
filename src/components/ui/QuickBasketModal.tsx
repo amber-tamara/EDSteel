@@ -63,8 +63,7 @@ export default function QuickBasketModal({
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 bg-gray-50 rounded-lg border border-gray-100 overflow-hidden flex-shrink-0 flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div className="w-16 h-16 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
             <img
               src={itemImageUrl}
               alt={itemName}
@@ -89,6 +88,9 @@ export default function QuickBasketModal({
             </button>
           </Link>
         </div>
+        <h2 className="border-t border-gray-300 mt-6 pt-6">
+          Recommended for you
+        </h2>
       </div>
     </div>
   );
