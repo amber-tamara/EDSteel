@@ -79,11 +79,11 @@ export default function ProductView({ productData }: ProductViewProps) {
 
         <div className="flex flex-col justify-between">
           <div>
-            <h1 className="hidden lg:block text-3xl leading-[1.2] text-black font-bold mb-4">
+            <h1 className="hidden lg:block text-3xl leading-[1.2] text-black font-semibold mb-4">
               {product.name}
             </h1>
 
-            <p className="text-4xl leading-[1.6] font-semibold mb-4 text-black">
+            <p className="text-4xl leading-[1.6] font-bold mb-4 text-black">
               £3.99
             </p>
           </div>
@@ -96,7 +96,7 @@ export default function ProductView({ productData }: ProductViewProps) {
 
             <div className="w-full">
               <Button
-                label="Add to Basket"
+                label="Add to basket"
                 className="w-full flex text-black"
                 onClick={handleClick}
               />

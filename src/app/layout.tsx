@@ -5,7 +5,7 @@ import Footer from '@/components/layout/Footer';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['200', '400', '900'],
+  weight: ['200', '400', '600', '700'],
   variable: '--font-geist-sans',
 });
 

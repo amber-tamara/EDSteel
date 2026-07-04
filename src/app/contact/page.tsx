@@ -1,4 +1,5 @@
 'use client';
+
 import Breadcrumbs from '@/components/ui/Breadcrumb';
 import Button from '@/components/ui/Button';
 import { FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
@@ -9,53 +10,81 @@ export default function ContactPage() {
     name: '',
     email: '',
     message: '',
-    captcha: false,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
   const handleChange = (e: any) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
+    setSuccess(false);
+    setError('');
 
-    if (!form.captcha) {
-      alert("Please confirm you're not a robot");
-      return;
+    try {
+      const body = new FormData();
+
+      body.append('your-name', form.name.trim());
+      body.append('your-email', form.email.trim());
+      body.append('your-message', form.message.trim());
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.status !== 'mail_sent') {
+        throw new Error(data?.message || 'Failed to send message');
+      }
+
+      setSuccess(true);
+      setForm({ name: '', email: '', message: '' });
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
-
-    // TODO: hook this into your API route
-    console.log(form);
-    alert('Message sent (not really yet)');
   };
 
   return (
     <div>
-      <div className="">
+      <div>
         <Breadcrumbs />
         <h1 className="font-semibold text-4xl pt-4">Contact Us</h1>
       </div>
+
       <div className="mx-auto py-10 grid md:grid-cols-2 gap-10">
         <div className="space-y-6 bg-white border rounded-2xl p-6">
-          <div>
-            <h2 className="font-semibold text-xl border-b pb-4">
-              Contact details
-            </h2>
-          </div>
+          <h2 className="font-semibold text-xl border-b pb-4">
+            Contact details
+          </h2>
+
           <div className="flex">
             <FaPhone size={25} className="mr-2" />
             <a href="tel:+441234567890" className="text-black hover:underline">
               01246 413242
             </a>
           </div>
+
           <div className="flex">
             <FaEnvelope size={25} className="mr-2" />
             <p>edsteel@support.com</p>
           </div>
+
           <div className="flex">
             <FaMapMarkerAlt size={25} className="mr-2" />
             <p>28–30 Chesterfield Road, Dronfield, S18 2XB</p>
@@ -123,20 +152,19 @@ export default function ContactPage() {
             className="w-full border rounded-lg px-3 py-2"
           />
 
-          {/* SIMPLE CAPTCHA */}
-          <label className="flex items-center space-x-2 text-sm m-0 mb-1">
-            <input
-              type="checkbox"
-              name="captcha"
-              checked={form.captcha}
-              onChange={handleChange}
-              className="cursor-pointer"
-            />
-            <span>I am not a robot</span>
-          </label>
-          <Button label="Send message" className="flex w-full" />
+          <Button
+            label={loading ? 'Sending...' : 'Send message'}
+            className="flex w-full"
+            disabled={loading}
+          />
+
+          {success && (
+            <p className="text-green-600 text-sm">Message sent successfully.</p>
+          )}
+
+          {error && <p className="text-red-600 text-sm">{error}</p>}
         </form>
-        {/* MAP */}
+
         <div className="md:col-span-2 space-y-2 mt-6">
           <h2 className="font-semibold text-xl">Find Us</h2>
 

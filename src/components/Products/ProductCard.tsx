@@ -62,7 +62,7 @@ export default function ProductCard({
               <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
                 <WishlistHeart productId={product.id} onClick={onClick} />
                 <Button
-                  label="Add to Basket"
+                  label="Add to basket"
                   onClick={handleBasketClick}
                   className="sm:flex hidden"
                 />
