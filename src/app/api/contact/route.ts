@@ -4,7 +4,6 @@ export async function POST(req: Request) {
   try {
     let rawBody: any = {};
 
-    // 1. Parse the incoming request safely
     try {
       rawBody = await req.json();
     } catch (jsonErr) {
@@ -19,23 +18,20 @@ export async function POST(req: Request) {
             jsonErr: String(jsonErr),
             formErr: String(formErr),
           },
-          { status: 400 }, // Bad Request makes more sense here than a 500
+          { status: 400 },
         );
       }
     }
 
-    // 2. Extract values
     const name = rawBody.name || rawBody['your-name'] || '';
     const email = rawBody.email || rawBody['your-email'] || '';
     const message = rawBody.message || rawBody['your-message'] || '';
 
-    // 3. Reconstruct as FormData for Contact Form 7
     const wpFormData = new FormData();
     wpFormData.append('your-name', name);
     wpFormData.append('your-email', email);
     wpFormData.append('your-message', message);
 
-    // 🔥 REQUIRED CF7 metadata
     wpFormData.append('_wpcf7', '6796');
     wpFormData.append('_wpcf7_version', '5.9.0'); // can be approximate
     wpFormData.append('_wpcf7_locale', 'en_GB');
@@ -43,8 +39,6 @@ export async function POST(req: Request) {
     wpFormData.append('_wpcf7_container_post', '0');
 
     try {
-      // Switched to 127.0.0.1 to avoid local host file / DNS resolution issues
-      // Replace your current fetch URL with this one:
       const res = await fetch(
         'http://edsteel.local/wp-json/contact-form-7/v1/contact-forms/6796/feedback',
         {

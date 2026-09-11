@@ -26,6 +26,8 @@ export default function ProductCard({
           const productImage =
             product.img || product.image || product.images?.[0]?.src || '';
 
+          console.log(productImage);
+
           const handleBasketClick = async () => {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             onAddToBasket(product.name, productImage);
