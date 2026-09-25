@@ -11,11 +11,12 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
         <div className="flex justify-between gap-2 relative z-51 pb-2">
           <MobileNav categories={categories} />
-
-          <button className="flex items-center justify-center flex-col">
-            <FaPhone size={20} />
-            <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
-          </button>
+          <Link href="/contact" className="flex justify-center">
+            <button className="flex items-center justify-center flex-col cursor-pointer">
+              <FaPhone size={20} />
+              <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
+            </button>
+          </Link>
           <Link href="/" className="shrink-0">
             <Image
               src="/ED_logo_sm.svg"
@@ -37,8 +38,7 @@ export default function MobileHeader({ categories }: MobileHeaderProps) {
           </button>
         </div>
 
-        {/* Lowered the search bar section's stack position */}
-        <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full text-black">
           <SearchBar />
         </div>
       </div>
