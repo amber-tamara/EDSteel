@@ -88,9 +88,6 @@ export default function QuickBasketModal({
             </button>
           </Link>
         </div>
-        <h2 className="border-t border-gray-300 mt-6 pt-6">
-          Recommended for you
-        </h2>
       </div>
     </div>
   );

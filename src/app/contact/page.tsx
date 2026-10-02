@@ -3,62 +3,19 @@
 import Breadcrumbs from '@/components/ui/Breadcrumb';
 import Button from '@/components/ui/Button';
 import { FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
-import { useState } from 'react';
+import { useActionState } from 'react';
+import { sendEmail } from '../actions/email';
+
+export type ActionState = {
+  success?: boolean;
+  error?: string;
+} | null;
 
 export default function ContactPage() {
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    setSuccess(false);
-    setError('');
-
-    try {
-      const body = new FormData();
-
-      body.append('your-name', form.name.trim());
-      body.append('your-email', form.email.trim());
-      body.append('your-message', form.message.trim());
-
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || data.status !== 'mail_sent') {
-        throw new Error(data?.message || 'Failed to send message');
-      }
-
-      setSuccess(true);
-      setForm({ name: '', email: '', message: '' });
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [state, formAction, isPending] = useActionState<ActionState>(
+    sendEmail,
+    null,
+  );
 
   return (
     <div>
@@ -115,7 +72,7 @@ export default function ContactPage() {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          action={formAction}
           className="bg-white border rounded-2xl p-6 space-y-6 shadow-sm"
         >
           <h2 className="text-xl font-semibold border-b pb-4">
@@ -126,43 +83,42 @@ export default function ContactPage() {
             type="text"
             name="name"
             placeholder="Your name"
-            value={form.name}
-            onChange={handleChange}
             required
-            className="w-full border rounded-lg px-3 py-2"
+            disabled={isPending}
+            className="w-full border rounded-lg px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
 
           <input
             type="email"
             name="email"
             placeholder="Your email"
-            value={form.email}
-            onChange={handleChange}
             required
-            className="w-full border rounded-lg px-3 py-2"
+            disabled={isPending}
+            className="w-full border rounded-lg px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
 
           <textarea
             name="message"
             placeholder="Your message"
-            value={form.message}
-            onChange={handleChange}
             required
             rows={4}
-            className="w-full border rounded-lg px-3 py-2"
+            disabled={isPending}
+            className="w-full border rounded-lg px-3 py-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
 
           <Button
-            label={loading ? 'Sending...' : 'Send message'}
+            label={isPending ? 'Sending...' : 'Send message'}
             className="flex w-full"
-            disabled={loading}
+            disabled={isPending}
           />
 
-          {success && (
+          {state?.success && (
             <p className="text-green-600 text-sm">Message sent successfully.</p>
           )}
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+          {state?.error && (
+            <p className="text-red-600 text-sm">{state?.error}</p>
+          )}
         </form>
 
         <div className="md:col-span-2 space-y-2 mt-6">

@@ -6,10 +6,12 @@ export default function Button({
   label,
   onClick,
   className,
+  disabled,
 }: {
   label: string;
   onClick?: () => void | Promise<void>;
   className: string;
+  disabled: boolean;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -27,9 +29,10 @@ export default function Button({
   return (
     <button
       onClick={handleClick}
+      disabled={disabled}
       className={`px-7 py-3 rounded-[3.75rem] bg-white font-bold text-black border-2 border-black
                  hover:bg-black hover:text-white hover:shadow-inner transition duration-200 cursor-pointer
-                items-center justify-center space-x-1 min-h-[50px] ${className}`}
+                items-center justify-center space-x-1 min-h-[50px] ${className} disabled:cursor-not-allowed disabled:pointer-events-none`}
     >
       <div
         className={`absolute flex space-x-1.5 transition-opacity duration-200 ease-in-out
