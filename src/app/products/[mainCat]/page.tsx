@@ -34,15 +34,19 @@ export default function MainCategoryPage() {
       });
   }, [mainCat]);
 
-  return loading ? (
-    <LoadingBar />
-  ) : (
-    <div className="text-black">
-      <Breadcrumbs mainCat={mainCat} />
-      <h1 className="text-4xl font-bold py-6">
-        {fromSlugToName(andToAmpersand(mainCat))}
-      </h1>
-      <CategoryOverview mainCat={mainCat} subCategories={subCategories} />
+  return (
+    <div className="text-black min-h-[700px] w-full">
+      {loading ? (
+        <LoadingBar />
+      ) : (
+        <div>
+          <Breadcrumbs mainCat={mainCat} />
+          <h1 className="text-4xl font-bold py-6">
+            {fromSlugToName(andToAmpersand(mainCat))}
+          </h1>
+          <CategoryOverview mainCat={mainCat} subCategories={subCategories} />
+        </div>
+      )}
     </div>
   );
 }

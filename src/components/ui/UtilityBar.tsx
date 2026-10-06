@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTransition } from 'react';
 import {
   FaHeart,
   FaUserPlus,
@@ -10,6 +11,12 @@ import {
 } from 'react-icons/fa';
 
 export default function UtilityBar() {
+  const [isPending, startTransition] = useTransition();
+  const handleNavigation = () => {
+    startTransition(() => {
+      router.push('/about');
+    });
+  };
   return (
     <div className="w-full bg-primary-custom-teal text-white px-15">
       <div className="flex justify-between items-center py-2 text-sm">
@@ -33,7 +40,7 @@ export default function UtilityBar() {
             className="flex items-center gap-1 hover:underline"
           >
             <FaHeart size={14} />
-            <span>Wishlist</span>
+            <span>Wish list</span>
           </Link>
 
           <Link

@@ -3,9 +3,11 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 import LoadingBar from './LoadingBar';
 
 export default function SearchBar() {
+  const [isPending, startTransition] = useTransition();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,7 +73,9 @@ export default function SearchBar() {
     if (!query.trim()) return;
     setQuery('');
     setResults([]);
-    router.push(`/search?term=${encodeURIComponent(query)}`);
+    startTransition(() => {
+      router.push(`/search?term=${encodeURIComponent(query)}`);
+    });
   };
 
   const handleSingleItem = (url: string) => {
@@ -127,7 +131,7 @@ export default function SearchBar() {
             ))}
         </div>
       )}
-      {loading && <LoadingBar />}
+      {isPending && <LoadingBar />}
     </div>
   );
 }

@@ -121,12 +121,8 @@ export default function WishlistPage() {
     }
   };
 
-  if (!isLoaded) {
-    return <LoadingBar />;
-  }
-
   return (
-    <div className="relative">
+    <div className={`relative min-h-[700px] w-full'}`}>
       {alertTrigger && (
         <div className="sticky top-31 lg:top-0 left-0 z-50">
           <BasketNotification
@@ -140,7 +136,9 @@ export default function WishlistPage() {
         <h1 className="text-3xl font-bold text-gray-900">My wish list</h1>
       </div>
 
-      {wishlistProducts.length === 0 ? (
+      {!isLoaded ? (
+        <LoadingBar />
+      ) : wishlistProducts.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-gray-600 text-lg mb-4">
             Your Wish List is currently empty.
