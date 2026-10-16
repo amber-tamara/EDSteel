@@ -1,7 +1,10 @@
 'use client';
 
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import LoadingBar from '@/components/ui/LoadingBar';
 import WishlistHeart from '../ui/WishlistHeart';
 
 export default function ProductCard({
@@ -19,59 +22,78 @@ export default function ProductCard({
   onClick: () => void;
   onAddToBasket: (name: string, img: string) => void;
 }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleCardClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    destinationUrl: string,
+  ) => {
+    e.preventDefault();
+    startTransition(() => {
+      router.push(destinationUrl);
+    });
+  };
+
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 ${className || ''}`}>
-      {Array.isArray(products) &&
-        products.map((product) => {
-          const productImage =
-            product.img || product.image || product.images?.[0]?.src || '';
+    <div className={`relative ${className || ''}`}>
+      {/* Show the LoadingBar at the top if a page transition is pending */}
+      {isPending && <LoadingBar />}
 
-          console.log(productImage);
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {Array.isArray(products) &&
+          products.map((product) => {
+            const productImage =
+              product.img || product.image || product.images?.[0]?.src || '';
 
-          const handleBasketClick = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            onAddToBasket(product.name, productImage);
-          };
+            const destinationUrl = subCat
+              ? `/products/${mainCat}/${subCat}/${product.slug}`
+              : product.url;
 
-          return (
-            <div
-              key={product.id}
-              className="group relative flex flex-col bg-white border border-transparent hover:border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-            >
-              <Link
-                href={
-                  subCat
-                    ? `/products/${mainCat}/${subCat}/${product.slug}`
-                    : product.url
-                }
-                className="flex sm:flex-col flex-1"
+            const handleBasketClick = async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              onAddToBasket(product.name, productImage);
+            };
+
+            return (
+              <div
+                key={product.id}
+                className="group relative flex flex-col bg-white border border-transparent hover:border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
               >
-                <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
-                  <img
-                    src={productImage}
-                    alt={product.name}
-                    className="w-full h-full object-contain"
+                <Link
+                  href={destinationUrl}
+                  onClick={(e) => handleCardClick(e, destinationUrl)}
+                  className="flex sm:flex-col flex-1 cursor-pointer"
+                >
+                  <div className="relative overflow-hidden aspect-square bg-gray-50 mx-4 flex-1 sm:flex-none">
+                    <img
+                      src={productImage}
+                      alt={product.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="mx-4 sm:m-4 flex flex-col flex-1 justify-center">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
+                      {product.name}
+                    </h2>
+
+                    <p className="mt-2 text-xl font-bold text-gray-900">
+                      £3.99
+                    </p>
+                  </div>
+                </Link>
+                <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
+                  <WishlistHeart productId={product.id} onClick={onClick} />
+                  <Button
+                    label="Add to basket"
+                    onClick={handleBasketClick}
+                    className="sm:flex hidden"
                   />
                 </div>
-                <div className="mx-4 sm:m-4 flex flex-col flex-1 justify-center">
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
-                    {product.name}
-                  </h2>
-
-                  <p className="mt-2 text-xl font-bold text-gray-900">£3.99</p>
-                </div>
-              </Link>
-              <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
-                <WishlistHeart productId={product.id} onClick={onClick} />
-                <Button
-                  label="Add to basket"
-                  onClick={handleBasketClick}
-                  className="sm:flex hidden"
-                />
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+      </div>
     </div>
   );
 }

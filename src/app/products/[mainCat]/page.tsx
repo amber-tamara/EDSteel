@@ -11,14 +11,11 @@ interface MainCategoryPageProps {
 export default async function MainCategoryPage({
   params,
 }: MainCategoryPageProps) {
-  // In Next.js App Router, params is a Promise that needs to be awaited
   const { mainCat } = await params;
 
   let subCategories = [];
 
   try {
-    // Note: When fetching on the server, you may need an absolute URL (e.g., process.env.NEXT_PUBLIC_SITE_URL)
-    // depending on your environment, or you can fetch directly from your database/service layer.
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const res = await fetch(`${baseUrl}/api/products/${mainCat}`, {
       cache: 'no-store', // Ensures fresh data on each request

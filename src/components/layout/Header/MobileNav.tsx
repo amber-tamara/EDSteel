@@ -1,5 +1,9 @@
 'use client';
 
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import LoadingBar from '@/components/ui/LoadingBar';
+
 import { FaBars, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -10,12 +14,22 @@ interface MobileNavProps {
 }
 
 export default function MobileNav({ categories }: MobileNavProps) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [activeCat, setActiveCat] = useState<any>(null);
 
   const handleToggle = () => {
     setOpen(!open);
     setActiveCat(null);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+    e.preventDefault();
+    handleToggle();
+    startTransition(() => {
+      router.push(url);
+    });
   };
 
   return (
@@ -40,7 +54,7 @@ export default function MobileNav({ categories }: MobileNavProps) {
           {' '}
           <button
             onClick={handleToggle}
-            className="absolute top-4 -right-10 z-50 text-white cursor-pointer"
+            className="absolute top-4 -right-8 z-50 text-white cursor-pointer"
           >
             <FaTimes size={24} />
           </button>
@@ -81,40 +95,52 @@ export default function MobileNav({ categories }: MobileNavProps) {
               </ul>
             )}
 
-            {activeCat && (
-              <ul className="flex flex-col divide-y bg-white text-black">
-                <li className="py-5 px-4 bg-gray-200 font-bold text-lg">
-                  {activeCat.mainCat}
-                </li>
+            {activeCat &&
+              (() => {
+                const mainCatUrl = `/products/${activeCat.mainCatSlug}`;
 
-                <li className="py-5 px-4 hover:underline">
-                  <Link
-                    href={`/products/${activeCat.mainCatSlug}`}
-                    onClick={handleToggle}
-                    className="flex justify-between items-center"
-                  >
-                    <span>All {activeCat.mainCat}</span>
-                    <FaChevronRight className="opacity-40" />
-                  </Link>
-                </li>
+                return (
+                  <ul className="flex flex-col divide-y bg-white text-black">
+                    <li className="py-5 px-4 bg-gray-200 font-bold text-lg">
+                      {activeCat.mainCat}
+                    </li>
 
-                {activeCat.subCats.map((sub: any) => (
-                  <li key={sub.slug} className="py-5 px-4 hover:underline">
-                    <Link
-                      href={`/products/${activeCat.mainCatSlug}/${sub.slug}`}
-                      onClick={handleToggle}
-                      className="flex justify-between items-center"
-                    >
-                      {andToAmpersand(sub.name)}
-                      <FaChevronRight className="opacity-40" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
+                    <li className="py-5 px-4 hover:underline">
+                      <Link
+                        href={mainCatUrl}
+                        onClick={(e) => handleClick(e, mainCatUrl)}
+                        className="flex justify-between items-center"
+                      >
+                        <span>All {activeCat.mainCat}</span>
+                        <FaChevronRight className="opacity-40" />
+                      </Link>
+                    </li>
+
+                    {activeCat.subCats.map((sub: any) => {
+                      const destinationUrl = `${mainCatUrl}/${sub.slug}`;
+                      return (
+                        <li
+                          key={sub.slug}
+                          className="py-5 px-4 hover:underline"
+                        >
+                          <Link
+                            href={destinationUrl}
+                            onClick={(e) => handleClick(e, destinationUrl)}
+                            className="flex justify-between items-center"
+                          >
+                            {andToAmpersand(sub.name)}
+                            <FaChevronRight className="opacity-40" />
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                );
+              })()}
           </div>
         </div>
       )}
+      {isPending && <LoadingBar />}
     </div>
   );
 }

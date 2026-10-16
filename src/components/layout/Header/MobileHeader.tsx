@@ -7,15 +7,16 @@ import SearchBar from '@/components/ui/SearchBar';
 
 export default function MobileHeader({ categories }: MobileHeaderProps) {
   return (
-    <div className="text-white">
+    <div className="text-white relative">
       <div className="lg:hidden bg-primary-custom-teal flex flex-col justify-around p-2">
         <div className="flex justify-between gap-2 relative z-51 pb-2">
           <MobileNav categories={categories} />
-          <Link href="/contact" className="flex justify-center">
-            <button className="flex items-center justify-center flex-col cursor-pointer">
-              <FaPhone size={20} />
-              <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
-            </button>
+          <Link
+            href="/contact"
+            className="flex items-center justify-center flex-col cursor-pointer"
+          >
+            <FaPhone size={20} />
+            <h3 className="text-sm sm:text-base mt-0.5">Contact</h3>
           </Link>
           <Link href="/" className="shrink-0">
             <Image

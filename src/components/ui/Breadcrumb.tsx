@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 import { fromSlugToName, andToAmpersand } from '@/helpers/text';
+import LoadingBar from '@/components/ui/LoadingBar';
 
 interface BreadcrumbsProps {
   mainCat?: string;
@@ -16,6 +18,18 @@ export default function Breadcrumbs({
   productName,
 }: BreadcrumbsProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleTransitionClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    url: string,
+  ) => {
+    e.preventDefault();
+    startTransition(() => {
+      router.push(url);
+    });
+  };
 
   const isProductPage = pathname.startsWith('/products');
 
@@ -27,19 +41,23 @@ export default function Breadcrumbs({
     const pageName = pathname.replace('/', '');
 
     return (
-      <ol className="hidden sm:flex items-center text-black space-x-2 pt-3">
-        <li>
-          <Link href="/" className={linkStyle}>
-            Home
-          </Link>
-        </li>
+      <div className="relative">
+        {isPending && <LoadingBar />}
+        <ol className="hidden sm:flex items-center text-black space-x-2 pt-3">
+          <li>
+            {/* Home link has NO transition handler */}
+            <Link href="/" className={linkStyle}>
+              Home
+            </Link>
+          </li>
 
-        <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
+          <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
 
-        <li className={currentStyle}>
-          {fromSlugToName(andToAmpersand(pageName))}
-        </li>
-      </ol>
+          <li className={currentStyle}>
+            {fromSlugToName(andToAmpersand(pageName))}
+          </li>
+        </ol>
+      </div>
     );
   }
 
@@ -50,55 +68,69 @@ export default function Breadcrumbs({
   const isSubPage = pathname === subPath && !productName;
 
   return (
-    <ol className="hidden sm:flex items-center text-black space-x-2 pt-3">
-      <li className="flex items-center">
-        <Link href="/" className={linkStyle}>
-          Home
-        </Link>
-        <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
-      </li>
+    <div className="relative">
+      {/* Show the LoadingBar when any category/subcategory transition is pending */}
+      {isPending && <LoadingBar />}
 
-      {mainCat && (
+      <ol className="hidden sm:flex items-center text-black space-x-2 pt-3">
         <li className="flex items-center">
-          {isMainPage ? (
-            <span className={currentStyle}>
-              {fromSlugToName(andToAmpersand(mainCat))}
-            </span>
-          ) : (
-            <Link href={mainPath} className={linkStyle}>
-              {fromSlugToName(andToAmpersand(mainCat))}
-            </Link>
-          )}
-
-          {subCat && (
-            <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
-          )}
+          {/* Home link intentionally left without transition */}
+          <Link href="/" className={linkStyle}>
+            Home
+          </Link>
+          <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
         </li>
-      )}
 
-      {subCat && (
-        <li className="flex items-center">
-          {isSubPage ? (
-            <span className={currentStyle}>
-              {fromSlugToName(andToAmpersand(subCat))}
-            </span>
-          ) : (
-            <Link href={subPath} className={linkStyle}>
-              {fromSlugToName(andToAmpersand(subCat))}
-            </Link>
-          )}
+        {mainCat && (
+          <li className="flex items-center">
+            {isMainPage ? (
+              <span className={currentStyle}>
+                {fromSlugToName(andToAmpersand(mainCat))}
+              </span>
+            ) : (
+              <Link
+                href={mainPath}
+                onClick={(e) => handleTransitionClick(e, mainPath)}
+                className={linkStyle}
+              >
+                {fromSlugToName(andToAmpersand(mainCat))}
+              </Link>
+            )}
 
-          {productName && (
-            <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
-          )}
-        </li>
-      )}
+            {subCat && (
+              <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
+            )}
+          </li>
+        )}
 
-      {productName && (
-        <li className={currentStyle} title={productName}>
-          {productName}
-        </li>
-      )}
-    </ol>
+        {subCat && (
+          <li className="flex items-center">
+            {isSubPage ? (
+              <span className={currentStyle}>
+                {fromSlugToName(andToAmpersand(subCat))}
+              </span>
+            ) : (
+              <Link
+                href={subPath}
+                onClick={(e) => handleTransitionClick(e, subPath)}
+                className={linkStyle}
+              >
+                {fromSlugToName(andToAmpersand(subCat))}
+              </Link>
+            )}
+
+            {productName && (
+              <span className="mx-2 inline-block w-1.5 h-1.5 border-t border-r border-black rotate-45" />
+            )}
+          </li>
+        )}
+
+        {productName && (
+          <li className={currentStyle} title={productName}>
+            {productName}
+          </li>
+        )}
+      </ol>
+    </div>
   );
 }

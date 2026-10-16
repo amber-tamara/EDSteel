@@ -1,6 +1,8 @@
 'use client';
 import Button from '../ui/Button';
+import LoadingBar from '@/components/ui/LoadingBar';
 import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 
 export default function CategoryOverview({
   mainCat,
@@ -10,24 +12,34 @@ export default function CategoryOverview({
   subCategories: Array<{
     subCatId: number;
     subCatName: string;
-    products: Array<{ name: string; image: string | null }>;
+    subCatSlug: string;
+    products: Array<{ productName: string; image: string | null }>;
   }>;
 }) {
   const router = useRouter();
-  const handleClick = (url) => {
-    router.push(url);
+  const [isPending, startTransition] = useTransition();
+
+  const handleClick = (url: string) => {
+    startTransition(() => {
+      router.push(url);
+    });
   };
 
   return (
-    <div className="text-black pb-6">
+    <div className="text-black pb-6 relative">
+      {isPending && <LoadingBar />}
+
       {subCategories &&
         subCategories.map((item) => (
-          <div className="flex flex-col mb-12">
+          <div key={item.subCatId} className="flex flex-col mb-12">
             <h2 className="text-2xl font-bold pb-5">{item.subCatName}</h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-8">
-              {item.products.map((product) => (
-                <div className="flex flex-col items-center aspect-square flex-1">
+              {item.products.map((product, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center aspect-square flex-1"
+                >
                   <img
                     className="object-scale-down"
                     src={product.image ?? '/placeholder.png'}
@@ -42,11 +54,12 @@ export default function CategoryOverview({
 
             <Button
               label={decodeURIComponent(item.subCatName)}
-              className="w-full sm:w-1/3 lg:w-1/4 flex self-center text-black"
+              className="w-full sm:w-1/3 lg:w-1/4 flex self-center text-black justify-center"
               onClick={() =>
                 handleClick(`/products/${mainCat}/${item.subCatSlug}`)
               }
-            ></Button>
+              disabled={isPending}
+            />
           </div>
         ))}
     </div>
