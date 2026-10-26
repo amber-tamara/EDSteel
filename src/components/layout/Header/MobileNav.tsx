@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingBar from '@/components/ui/LoadingBar';
 
@@ -31,6 +31,17 @@ export default function MobileNav({ categories }: MobileNavProps) {
       router.push(url);
     });
   };
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
 
   return (
     <div className="flex">

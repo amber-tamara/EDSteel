@@ -107,7 +107,7 @@ export default function FilterNav({
 
   return (
     <div
-      className={`fixed inset-0 z-50 lg:hidden overflow-hidden ${
+      className={`fixed inset-0 z-[60] lg:hidden overflow-hidden ${
         open ? 'pointer-events-auto' : 'pointer-events-none'
       }`}
     >
