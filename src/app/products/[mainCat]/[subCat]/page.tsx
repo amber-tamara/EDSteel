@@ -1,6 +1,4 @@
-import { fromSlugToName, andToAmpersand } from '@/helpers/text';
-import Breadcrumbs from '@/components/ui/Breadcrumb';
-import SubCategoryClientView from '@/components/Products/SubCategoryClientView';
+import SubCategoryWrapper from '@/components/Products/SubCategoryWrapper';
 
 interface SubCategoryPageProps {
   params: Promise<{
@@ -33,31 +31,11 @@ export default async function SubCategoryPage({
   }
 
   return (
-    <div className="text-black min-h-[700px] w-full">
-      <Breadcrumbs mainCat={mainCat} subCat={subCat} />
-      <div className="flex justify-between">
-        <div>
-          <h1 className="text-4xl pt-7 sm:pt-10 font-bold">
-            {fromSlugToName(andToAmpersand(subCat))}
-          </h1>
-          <h2 className="mt-1 mb-10 lg:mb-0 text-gray-600">
-            See more{' '}
-            <a
-              className="font-bold cursor-pointer hover:underline"
-              href={`/products/${mainCat}`}
-            >
-              {fromSlugToName(andToAmpersand(mainCat))}
-            </a>
-          </h2>
-        </div>
-      </div>
-
-      <SubCategoryClientView
-        mainCat={mainCat}
-        subCat={subCat}
-        initialProducts={products}
-        initialAttributes={attributes}
-      />
-    </div>
+    <SubCategoryWrapper
+      mainCat={mainCat}
+      subCat={subCat}
+      initialProducts={products}
+      initialAttributes={attributes}
+    />
   );
 }

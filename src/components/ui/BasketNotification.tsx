@@ -31,7 +31,7 @@ export default function BasketNotification({
 
   return (
     <div
-      className={`absolute top-0 left-1/2 -translate-x-1/2 w-screen bg-white z-50 border-b border-gray-100 shadow-sm transition-transform duration-300 ease-in-out transform ${
+      className={`absolute top-0 left-1/2 -translate-x-1/2 w-screen bg-white z-50 border-b border-gray-100 shadow-md transition-transform duration-300 ease-in-out transform ${
         isMounted ? 'translate-y-0' : '-translate-y-full'
       }`}
     >

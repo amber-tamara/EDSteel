@@ -8,7 +8,6 @@ import Button from '@/components/ui/Button';
 import BackToTopBtn from '@/components/ui/BackToTopBtn';
 import FilterButton from '@/components/Products/FilterButton';
 import FilterNav from '@/components/Products/FilterNav';
-import BasketNotification from '@/components/ui/BasketNotification';
 import QuickBasketModal from '@/components/ui/QuickBasketModal';
 
 interface SubCategoryClientViewProps {
@@ -16,6 +15,7 @@ interface SubCategoryClientViewProps {
   subCat: string;
   initialProducts: any[];
   initialAttributes: any[];
+  onTriggerAlert?: () => void;
 }
 
 export default function SubCategoryClientView({
@@ -23,6 +23,7 @@ export default function SubCategoryClientView({
   subCat,
   initialProducts,
   initialAttributes,
+  onTriggerAlert,
 }: SubCategoryClientViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,11 +32,6 @@ export default function SubCategoryClientView({
   const [visibleCount, setVisibleCount] = useState(48);
   const [filterOpen, setFilterOpen] = useState(false);
   const [isReady, setIsReady] = useState(true);
-
-  const [alertTrigger, setAlertTrigger] = useState<{
-    id: string;
-    count: number;
-  } | null>(null);
 
   const [basketModal, setBasketModal] = useState<{
     isOpen: boolean;
@@ -231,17 +227,6 @@ export default function SubCategoryClientView({
 
   return (
     <div className="md:overscroll-none relative">
-      {alertTrigger && (
-        <div className="sticky top-31 lg:top-0 z-30">
-          <BasketNotification
-            key={alertTrigger.id}
-            addedCount={alertTrigger.count}
-            onClose={() => setAlertTrigger(null)}
-            varient={true}
-          />
-        </div>
-      )}
-
       <div className="flex justify-end mb-4">
         <FilterButton
           selectedFilters={selectedFilters}
@@ -278,12 +263,7 @@ export default function SubCategoryClientView({
             products={visibleProducts}
             subCat={subCat}
             mainCat={mainCat}
-            onClick={() =>
-              setAlertTrigger({
-                id: `single-${Date.now()}-${Math.random()}`,
-                count: 1,
-              })
-            }
+            onClick={onTriggerAlert}
             onAddToBasket={(itemName: string, itemImageUrl: string) =>
               setBasketModal({
                 isOpen: true,
