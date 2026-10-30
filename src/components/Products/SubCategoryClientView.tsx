@@ -16,6 +16,7 @@ interface SubCategoryClientViewProps {
   initialProducts: any[];
   initialAttributes: any[];
   onTriggerAlert?: () => void;
+  onCloseAlert?: () => void;
 }
 
 export default function SubCategoryClientView({
@@ -24,6 +25,7 @@ export default function SubCategoryClientView({
   initialProducts,
   initialAttributes,
   onTriggerAlert,
+  onCloseAlert,
 }: SubCategoryClientViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,9 +46,7 @@ export default function SubCategoryClientView({
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    () => {
-      return searchParams.get('category') || null;
-    },
+    () => searchParams.get('category') || null,
   );
 
   const [selectedFilters, setSelectedFilters] = useState<Record<string, any[]>>(
@@ -85,9 +85,7 @@ export default function SubCategoryClientView({
 
     router.replace(
       queryString ? `${currentPath}?${queryString}` : currentPath,
-      {
-        scroll: false,
-      },
+      { scroll: false },
     );
   }, [selectedCategory, selectedFilters, isReady, router]);
 
@@ -258,12 +256,20 @@ export default function SubCategoryClientView({
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
         />
+
         <div className="flex-1 flex flex-col">
           <ProductCard
             products={visibleProducts}
             subCat={subCat}
             mainCat={mainCat}
             onClick={onTriggerAlert}
+            onWishlistChange={(added: boolean) => {
+              if (added) {
+                onTriggerAlert?.();
+              } else {
+                onCloseAlert?.();
+              }
+            }}
             onAddToBasket={(itemName: string, itemImageUrl: string) =>
               setBasketModal({
                 isOpen: true,
@@ -293,6 +299,7 @@ export default function SubCategoryClientView({
           </div>
         </div>
       </div>
+
       <BackToTopBtn />
 
       <QuickBasketModal

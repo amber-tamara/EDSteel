@@ -71,6 +71,7 @@ export default function SubCategoryWrapper({
       )}
 
       <Breadcrumbs mainCat={mainCat} subCat={subCat} />
+
       <div className="flex justify-between">
         <div>
           <h1 className="text-4xl pt-7 sm:pt-10 font-bold">
@@ -94,6 +95,7 @@ export default function SubCategoryWrapper({
         initialProducts={initialProducts}
         initialAttributes={initialAttributes}
         onTriggerAlert={handleTriggerAlert}
+        onCloseAlert={handleClose}
       />
     </div>
   );

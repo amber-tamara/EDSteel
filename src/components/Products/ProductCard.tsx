@@ -13,6 +13,7 @@ export default function ProductCard({
   subCat,
   className,
   onClick,
+  onWishlistChange,
   onAddToBasket,
 }: {
   products: any[];
@@ -20,6 +21,7 @@ export default function ProductCard({
   subCat: string;
   className?: string;
   onClick: () => void;
+  onWishlistChange?: (added: boolean) => void;
   onAddToBasket: (name: string, img: string) => void;
 }) {
   const router = useRouter();
@@ -37,7 +39,6 @@ export default function ProductCard({
 
   return (
     <div className={`relative ${className || ''}`}>
-      {/* Show the LoadingBar at the top if a page transition is pending */}
       {isPending && <LoadingBar />}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -82,8 +83,12 @@ export default function ProductCard({
                     </p>
                   </div>
                 </Link>
+
                 <div className="flex flex-col sm:justify-between mt-auto px-4 pb-4 pt-1">
-                  <WishlistHeart productId={product.id} onClick={onClick} />
+                  <WishlistHeart
+                    productId={product.id}
+                    onClick={(added) => onWishlistChange?.(added)}
+                  />
                   <Button
                     label="Add to basket"
                     onClick={handleBasketClick}

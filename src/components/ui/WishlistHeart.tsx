@@ -8,7 +8,7 @@ export default function WishlistHeart({
   onClick,
 }: {
   productId: string | number;
-  onClick: () => void;
+  onClick: (added: boolean) => void;
 }) {
   const [saved, setSaved] = useState(false);
 
@@ -36,7 +36,7 @@ export default function WishlistHeart({
     }
 
     setSaved(!saved);
-    onClick();
+    onClick(!isRemoving);
   };
 
   return (

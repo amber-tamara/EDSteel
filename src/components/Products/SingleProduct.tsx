@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Breadcrumbs from '@/components/ui/Breadcrumb';
+import BasketNotification from '@/components/ui/BasketNotification';
 import QuantityInput from '../ui/QuantitySelector';
 import WishlistHeart from '../ui/WishlistHeart';
 import ProductDetails from './ProductDetails';
@@ -20,6 +21,14 @@ export default function ProductView({ productData }: ProductViewProps) {
   const [qty, setQty] = useState(1);
   const [product, setProduct] = useState(productData.singleProduct ?? null);
   const [variants, setVariants] = useState(productData.varients ?? []);
+
+  const [alertTrigger, setAlertTrigger] = useState<{
+    id: string;
+    count: number;
+  } | null>(null);
+
+  const [visible, setVisible] = useState(false);
+
   const [basketModal, setBasketModal] = useState<{
     isOpen: boolean;
     itemName: string;
@@ -44,6 +53,38 @@ export default function ProductView({ productData }: ProductViewProps) {
     };
   }, [basketModal.isOpen]);
 
+  useEffect(() => {
+    if (!alertTrigger) return;
+
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 9000);
+
+    return () => clearTimeout(timer);
+  }, [alertTrigger]);
+
+  useEffect(() => {
+    if (!alertTrigger || visible) return;
+
+    const timer = setTimeout(() => {
+      setAlertTrigger(null);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [alertTrigger, visible]);
+
+  const handleWishlistClick = (added: boolean) => {
+    if (added) {
+      setAlertTrigger({
+        id: `alert-${Date.now()}-${Math.random()}`,
+        count: 1,
+      });
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  };
+
   const handleClick = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setBasketModal({
@@ -54,7 +95,24 @@ export default function ProductView({ productData }: ProductViewProps) {
   };
 
   return (
-    <div className="-mx-5 md:-mx-15">
+    <div className="-mx-5 md:-mx-15 relative">
+      {alertTrigger && (
+        <div
+          className={`sticky lg:top-0 top-[125px] z-30 shadow-md transition-all duration-300 ease-in-out ${
+            visible
+              ? 'opacity-100 translate-y-0 pointer-events-auto'
+              : 'opacity-0 -translate-y-2 pointer-events-none'
+          }`}
+        >
+          <BasketNotification
+            key={alertTrigger.id}
+            addedCount={alertTrigger.count}
+            onClose={() => setVisible(false)}
+            varient={true}
+          />
+        </div>
+      )}
+
       <div className="px-5 lg:px-15">
         <Breadcrumbs
           mainCat={mainCat}
@@ -62,6 +120,7 @@ export default function ProductView({ productData }: ProductViewProps) {
           productName={product.name.split(/\d/)[0].trim()}
         />
       </div>
+
       <div className="flex flex-col lg:flex-row justify-center py-10 px-5">
         <div className="w-full lg:hidden">
           <h1 className="text-3xl leading-[1.2] text-black font-bold mb-4 text-center">
@@ -73,7 +132,7 @@ export default function ProductView({ productData }: ProductViewProps) {
           <img
             src={product.images[0].src}
             alt={product.images[0].alt || product.name}
-            className="mb-4 w-64 h-auto object-cover mx-auto lg:mx-0"
+            className="mb-4 mr-4 w-64 h-auto object-cover mx-auto lg:mx-0"
           />
         )}
 
@@ -91,7 +150,10 @@ export default function ProductView({ productData }: ProductViewProps) {
           <div className="flex flex-col flex-wrap gap-4">
             <div className="flex flex-row justify-between">
               <QuantityInput value={qty} onChange={setQty} />
-              <WishlistHeart productId={product.id} />
+              <WishlistHeart
+                productId={product.id}
+                onClick={handleWishlistClick}
+              />
             </div>
 
             <div className="w-full">
@@ -104,6 +166,7 @@ export default function ProductView({ productData }: ProductViewProps) {
           </div>
         </div>
       </div>
+
       <div className="bg-[#eff0f0] px-5 lg:px-15">
         <h2 className="text-2xl font-bold text-black pt-10 pb-6 border-b border-gray-300">
           Product details
@@ -124,6 +187,8 @@ export default function ProductView({ productData }: ProductViewProps) {
             mainCat={mainCat}
             subCat={subCat}
             className="lg:grid-cols-4 md:grid-cols-3 gap-1"
+            onClick={() => {}}
+            onWishlistChange={handleWishlistClick}
             onAddToBasket={(itemName: string, itemImageUrl: string) =>
               setBasketModal({
                 isOpen: true,
@@ -134,7 +199,9 @@ export default function ProductView({ productData }: ProductViewProps) {
           />
         </div>
       )}
+
       <BackToTopBtn className="mt-0!" />
+
       <QuickBasketModal
         isOpen={basketModal.isOpen}
         onClose={() => setBasketModal((prev) => ({ ...prev, isOpen: false }))}
